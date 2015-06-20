@@ -39,6 +39,15 @@
           </tr>
         </tbody>
       </table>
+
+      <nav>
+        <ul class="pager">
+          <li><a href="#" id="previous-page" ng-click="(currentPage==1) || (currentPage = currentPage - 1)">Previous</a></li>
+          <li><a href="#" id="next-page" ng-click="(currentPage==totalPages) || nextPage()">Next</a></li>
+          <span class="pull-right">Page: {{currentPage}} / {{totalPages}}</span>
+        </ul>
+      </nav>
+
     </div>
   </div>
 

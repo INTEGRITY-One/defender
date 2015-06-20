@@ -13,6 +13,7 @@ var _http = require('http');
 exports.index = function(req, res) {
   //var sector = escape("FOOD");
   console.log('things.controller: Received: PARAMS='+req.params.toString());
+  console.log('things.controller: Received: -PARAMS='+req);
   var skipcount = "0";
   var testval = req.params;
   if (testval.length > 0)
