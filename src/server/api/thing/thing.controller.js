@@ -10,59 +10,126 @@
 'use strict';
 
 var _ = require('lodash');
-var Thing = require('./thing.model');
+var _http = require('http');
 
-// Get list of things
+// Get list of recalls
 exports.index = function(req, res) {
-  Thing.find(function (err, things) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, things);
+  //var sector = escape("FOOD");
+  console.log('things.controller: Received: PARAMS='+req.params);
+
+  //var shortDesc = escape("CHICKENS, (EXCL BROILERS) - INVENTORY");
+  //var shortDesc = escape(req.params.commodity);
+  //var searchQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=reason_for_recall:ice+cream";
+  var recentQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=report_date:[2015-05-20+TO+2015-06-20]";
+  var host = "api.fda.gov";
+  var qrypath_food = "/food/enforcement.json?"+recentQueryString;
+  var qrypath_drug = "/drug/enforcement.json?"+recentQueryString;
+  var qrypath_device = "/device/enforcement.json?"+recentQueryString;
+  //var cntpath = "/api/api_GET/?"+queryString;
+  var http = require('http');
+
+  // See how many recs will bbe returned
+  //var cntReq = http.get({host: host, path: cntpath}, function(cntResp) {
+    /*console.log('STATUS: ' + cntResp.statusCode);
+     console.log('HEADERS: ' + JSON.stringify(cntResp.headers));*/
+
+    // Buffer the body entirely for processing as a whole.
+    /*var bodyChunks = [];
+    cntResp.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var body = Buffer.concat(bodyChunks);
+      //console.log('BODY: ' + body);
+
+      var jbody = JSON.parse(body);
+      console.log('livestock.controller: There are %d records matching the criteria', jbody.count);
+    })
+  });*/
+  var recallResultsList;
+
+  // Now perform the actual queries
+  // Query Food API
+  var qryReq = http.get({host: host, path: qrypath_food}, function(qryResp) {
+    console.log('STATUS: ' + qryResp.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
+
+    // Buffer the body entirely for processing as a whole.
+    var bodyChunks = [];
+    qryResp.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var foodResults = JSON.parse(Buffer.concat(bodyChunks));
+
+      console.log('BODY: ' + JSON.stringify(foodResults.results));
+      // ...and/or process the entire body here.
+      recallResultsList = foodResults;
+      return res.json(200, JSON.stringify(recallResultsList));
+    })
   });
+  // Query Drug API
+  qryReq = http.get({host: host, path: qrypath_drug}, function(qryResp) {
+    console.log('STATUS: ' + qryResp.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
+
+    // Buffer the body entirely for processing as a whole.
+    var bodyChunks = [];
+    qryResp.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var drugResults = JSON.parse(Buffer.concat(bodyChunks));
+
+      console.log('BODY: ' + JSON.stringify(drugResults.results));
+      // ...and/or process the entire body here.
+      recallResultsList = drugResults;
+
+    })
+  });
+  // Query Device API
+  qryReq = http.get({host: host, path: qrypath_device}, function(qryResp) {
+    console.log('STATUS: ' + qryResp.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
+
+    // Buffer the body entirely for processing as a whole.
+    var bodyChunks = [];
+    qryResp.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var deviceResults = JSON.parse(Buffer.concat(bodyChunks));
+
+      console.log('BODY: ' + JSON.stringify(deviceResults.results));
+      // ...and/or process the entire body here.
+      recallResultsList = deviceResults;
+
+    })
+  });
+
+  //if (err) return handleError(err);
+  // Continue if there are no errors...
+  //console.log("retrieved data: " + recallResultsList);
+  //return res.json(200, JSON.stringify(recallResultsList));
+
+
+  /*  console.log('livestock.controller: There are %d records matching the criteria', data);
+   console.log('retrieved data: ' + livestockData);
+   return res.json(200, livestockData);*/
 };
 
-// Get a single thing
-exports.show = function(req, res) {
-  Thing.findById(req.params.id, function (err, thing) {
-    if(err) { return handleError(res, err); }
-    if(!thing) { return res.send(404); }
-    return res.json(thing);
-  });
-};
+// Get list of distinct Commodity values
+/*exports.distinct = function(req, res) {
+  console.log('livestock.controller: Received: field='+req.params.field);
 
-// Creates a new thing in the DB.
-exports.create = function(req, res) {
-  Thing.create(req.body, function(err, thing) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, thing);
-  });
-};
-
-// Updates an existing thing in the DB.
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Thing.findById(req.params.id, function (err, thing) {
-    if (err) { return handleError(res, err); }
-    if(!thing) { return res.send(404); }
-    var updated = _.merge(thing, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, thing);
-    });
-  });
-};
-
-// Deletes a thing from the DB.
-exports.destroy = function(req, res) {
-  Thing.findById(req.params.id, function (err, thing) {
-    if(err) { return handleError(res, err); }
-    if(!thing) { return res.send(404); }
-    thing.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.send(204);
-    });
-  });
-};
+  return res.json(200, [ "CHICKENS, (EXCL BROILERS) - INVENTORY" ]);
+  /*Empl.distinct( req.params.field, null, function (err, distinctEmpls) {
+   if (err) return handleError(err);
+   // Continue if there are no errors...
+   return res.json(200, distinctEmpls);
+   });*/
+//};
 
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.send(500, "Oops!");
 }
