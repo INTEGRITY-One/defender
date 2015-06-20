@@ -1,0 +1,39 @@
+<div ng-controller="ResultsAreaCtrl">
+
+  <div class='row'>
+    <div class='col-sm-9'>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              Report Date
+            </th>
+            <th>
+              Classification
+            </th>
+            <th>
+              Recalling Firm
+            </th>
+            <th>
+              Product Description
+            </th>
+            <th>
+              Status
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat='recallResults in recallResultsList'>
+            <td>{{recallResults.reportDate}}</td>
+            <td>{{recallResults.classification}}</td>
+            <td>{{recallResults.recallingFirm}}</td>
+            <td>{{recallResults.productDescripition}}</td>
+            <td>{{recallResults.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
