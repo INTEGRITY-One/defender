@@ -8,7 +8,7 @@ angular.module('defenderApp')
     $scope.errorHappenedResultsArea = false;
 
     //pagination
-    $scope.skip = 0;
+    $scope.skip = 30;
     $scope.pageSize = 10;
     $scope.totalPages = 20;
     $scope.currentPage = 1;
@@ -16,15 +16,12 @@ angular.module('defenderApp')
     $scope.recallResultsList = [];
 
     $scope.getApi = function() {
-      $http.get('/api/things?skip=' + $scope.skip.toString())
+      $http.get('/api/things?skip=30')
         .success(function (recallResultsList) {
           var response = JSON.parse(recallResultsList);
-          //var results = response.results;
-          //$scope.totalPages = response.meta.results.total / $scope.pageSize;
-          //$scope.recallResultsList = results;
-          console.log(response)
-          $scope.totalPages = 13;//123 / $scope.pageSize;
-          $scope.recallResultsList = response;
+          var results = response.results;
+          $scope.totalPages = response.meta.results.total / $scope.pageSize;
+          $scope.recallResultsList = results;
         })
         .error(function () {
           $scope.errorHappenedResultsArea = true;
