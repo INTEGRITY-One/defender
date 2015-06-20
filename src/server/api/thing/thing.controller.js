@@ -1,10 +1,7 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
  * GET     /things              ->  index
- * POST    /things              ->  create
  * GET     /things/:id          ->  show
- * PUT     /things/:id          ->  update
- * DELETE  /things/:id          ->  destroy
  */
 
 'use strict';
@@ -15,7 +12,7 @@ var _http = require('http');
 // Get list of recalls
 exports.index = function(req, res) {
   //var sector = escape("FOOD");
-  console.log('things.controller: Received: PARAMS='+req.params);
+  console.log('things.controller: Received: PARAMS='+req.params.toString());
 
   //var shortDesc = escape("CHICKENS, (EXCL BROILERS) - INVENTORY");
   //var shortDesc = escape(req.params.commodity);
@@ -46,7 +43,7 @@ exports.index = function(req, res) {
       console.log('livestock.controller: There are %d records matching the criteria', jbody.count);
     })
   });*/
-  var recallResultsList;
+  var recallResultsList = [];
 
   // Now perform the actual queries
   // Query Food API
@@ -60,12 +57,13 @@ exports.index = function(req, res) {
       // You can process streamed parts here...
       bodyChunks.push(chunk);
     }).on('end', function() {
-      var foodResults = JSON.parse(Buffer.concat(bodyChunks));
-
-      console.log('BODY: ' + JSON.stringify(foodResults.results));
+      var body = JSON.parse(Buffer.concat(bodyChunks));
+      var foodResults = body.results;
+      console.log('BODY: ' + JSON.stringify(foodResults));
       // ...and/or process the entire body here.
-      recallResultsList = foodResults;
-      return res.json(200, JSON.stringify(recallResultsList));
+      //recallResultsList.concat(foodResults);
+
+      return res.json(200, JSON.stringify(foodResults));
     })
   });
   // Query Drug API
@@ -79,11 +77,11 @@ exports.index = function(req, res) {
       // You can process streamed parts here...
       bodyChunks.push(chunk);
     }).on('end', function() {
-      var drugResults = JSON.parse(Buffer.concat(bodyChunks));
-
-      console.log('BODY: ' + JSON.stringify(drugResults.results));
+      var body = JSON.parse(Buffer.concat(bodyChunks));
+      var drugResults = body.results;
+      console.log('BODY: ' + JSON.stringify(drugResults));
       // ...and/or process the entire body here.
-      recallResultsList = drugResults;
+      recallResultsList.concat(drugResults);
 
     })
   });
@@ -98,12 +96,13 @@ exports.index = function(req, res) {
       // You can process streamed parts here...
       bodyChunks.push(chunk);
     }).on('end', function() {
-      var deviceResults = JSON.parse(Buffer.concat(bodyChunks));
-
-      console.log('BODY: ' + JSON.stringify(deviceResults.results));
+      var body = JSON.parse(Buffer.concat(bodyChunks));
+      var deviceResults = body.results;
+      console.log('BODY: ' + JSON.stringify(deviceResults));
       // ...and/or process the entire body here.
-      recallResultsList = deviceResults;
+      recallResultsList.concat(deviceResults);
 
+      //return res.json(200, JSON.stringify(recallResultsList));
     })
   });
 
@@ -131,5 +130,5 @@ exports.index = function(req, res) {
 //};
 
 function handleError(res, err) {
-  return res.send(500, "Oops!");
+  return res.send(200, "Oops!");
 }
