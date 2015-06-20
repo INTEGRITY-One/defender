@@ -1,11 +1,19 @@
 language: node_js
 node_js:
-- '0.10'
 - '0.11'
-before_script:
+before_install:
 - npm install -g bower grunt-cli
 - cd src
 - bower install
+install:
+- pwd
+- npm install
+before_script:
+- pwd
+- grunt build
+script:
+- pwd
+- npm test
 services: mongodb
 deploy:
   provider: codedeploy
