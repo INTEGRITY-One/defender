@@ -8,7 +8,15 @@
 
   <div ng-hide="errorHappenedResultsArea" class='row'>
     <div class='col-sm-9'>
-      <table class="table table-striped">
+
+      <div id="info-container">
+        <div id="field-report-date" class="col-sm-12">
+          <div class="col-sm-3 field-name"></div>
+          <div class="col-sm-9 field-value"></div>
+        </div>
+      </div>
+
+      <table class="table table-striped" id="mainGrid">
         <thead>
           <tr>
             <th>
@@ -36,6 +44,7 @@
             <td>{{recallResults.recalling_firm}}</td>
             <td>{{recallResults.product_description}}</td>
             <td>{{recallResults.status}}</td>
+            <td><a href="#" ng-click="showMoreInfo($index)">More</a></td>
           </tr>
         </tbody>
       </table>

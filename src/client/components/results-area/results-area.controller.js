@@ -15,6 +15,8 @@ angular.module('defenderApp')
 
     $scope.recallResultsList = [];
 
+    $scope.showInfoIsVisible = false;
+
     $scope.getApi = function() {
       $http.get('/api/things?skip=30')
         .success(function (recallResultsList) {
@@ -35,6 +37,17 @@ angular.module('defenderApp')
     }
 
     $scope.getApi();
+
+    $('#info-container').fadeOut();
+    $scope.showMoreInfo = function(idx) {
+      console.log(idx);
+      $('#mainGrid').fadeOut();
+      $('#info-container').fadeIn();
+
+      $('#field-report-date .field-name').text("Report Date");
+      console.log($scope.recallResultsList[1]['report_date'])
+      $('#field-report-date .field-value').text($scope.recallResultsList[idx]['report_date']);
+    }
   });
 
 /**
