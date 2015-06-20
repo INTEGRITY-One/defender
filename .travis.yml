@@ -23,7 +23,7 @@ services: mongodb
 #  bucket: "DefenderBucket"
 #  revision_type: github
 #  bundle_type: zip
-#  application: defender
+##  application: defender
 #  deployment_group: ''
 #  on:
 #    repo: INTEGRITY-One/defender
