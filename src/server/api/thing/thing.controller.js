@@ -13,11 +13,18 @@ var _http = require('http');
 exports.index = function(req, res) {
   //var sector = escape("FOOD");
   console.log('things.controller: Received: PARAMS='+req.params.toString());
-
+  //req.params.get("skip")
   //var shortDesc = escape("CHICKENS, (EXCL BROILERS) - INVENTORY");
   //var shortDesc = escape(req.params.commodity);
   //var searchQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=reason_for_recall:ice+cream";
-  var recentQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=report_date:[2015-05-20+TO+2015-06-20]";
+  var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=10&skip=0";
+
+  var curDate = new Date();
+  var thirtyDaysAgo = curDate-30;
+  //console.log("formatted: " + Date.format(thirtyDaysAgo, "Y-m-d"));
+  var recentQueryString = baseQueryString + "&search=report_date:[2015-05-20+TO+2015-06-20]"
+  /*var recentQueryString = baseQueryString + "&search=report_date:[" +
+        thirtyDaysAgo.format("Y-m-d") + "+TO+" + curDate.format("Y-m-d") + "]";*/
   var host = "api.fda.gov";
   var qrypath_food = "/food/enforcement.json?"+recentQueryString;
   var qrypath_drug = "/drug/enforcement.json?"+recentQueryString;
@@ -58,16 +65,17 @@ exports.index = function(req, res) {
       bodyChunks.push(chunk);
     }).on('end', function() {
       var body = JSON.parse(Buffer.concat(bodyChunks));
-      var foodResults = body.results;
-      console.log('BODY: ' + JSON.stringify(foodResults));
+      var foodResults = body;
+      console.log('BODY: ' + foodResults);
       // ...and/or process the entire body here.
       //recallResultsList.concat(foodResults);
 
       return res.json(200, JSON.stringify(foodResults));
     })
   });
+
   // Query Drug API
-  qryReq = http.get({host: host, path: qrypath_drug}, function(qryResp) {
+  /*qryReq = http.get({host: host, path: qrypath_drug}, function(qryResp) {
     console.log('STATUS: ' + qryResp.statusCode);
     console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
 
@@ -104,7 +112,7 @@ exports.index = function(req, res) {
 
       //return res.json(200, JSON.stringify(recallResultsList));
     })
-  });
+  });*/
 
   //if (err) return handleError(err);
   // Continue if there are no errors...
