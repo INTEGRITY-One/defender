@@ -1,6 +1,12 @@
 <div ng-controller="ResultsAreaCtrl">
 
-  <div class='row'>
+  <div ng-show="errorHappenedResultsArea" class='row'>
+    <div class='col-sm-9'>
+      <h1>Oops, something went terribly wrong!</h1>
+    </div>
+  </div>
+
+  <div ng-hide="errorHappenedResultsArea" class='row'>
     <div class='col-sm-9'>
       <table class="table table-striped">
         <thead>
