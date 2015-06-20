@@ -3,25 +3,6 @@ node_js:
   - '0.10'
   - '0.11'
 before_script:
-<<<<<<< HEAD
   - npm install -g bower grunt-cli
   - bower install
 services: mongodb
-=======
-- npm install -g bower grunt-cli
-- cd src
-- bower install
-services: mongodb
-deploy:
-  provider: codedeploy
-  access_key_id: AKIAIDOAXRIHMOZWARNQ
-  secret_access_key:
-    secure: M9/CRfDuJ5Ye1RvFO0YGTQ2/Yof319YN+22gFx9FfxRsi1IewhoDSqNIzCsjhQUZ88FpNSM8ysXGBDN6kd1yM+ZbUs4JeoDs+FW7mjWiqWdL8S1hyodwCkDkv7ukRiqBm3VCJ9vBdAiMQIhGIAYq0NsWSfTcYggyQr3YK83E+CA46o5uUU/cbW2S5iARolPX1d5C/PU2zcPShHFi5RDO7HU8mIuJgyOTnQSzvGcV0bkQi3bf/TSQ0ja/6iR3oefSWqtjh0iy/OQGqOuYt40EIck8oeU/rqafyCtYuyXLCMjq022q0vq2sTcw+Ft9dqr0h/QZ66ZwdHyeDFy3+QyzqGdykPkh5eCRC7rMAcj4uv+Z0Hw/vwFOlcXu4FwcnvwZjJlsAV1NZPv5nqJMPhL+xzFIKz1f5DdeTdwnXrR9mvkWJ2CHHPKAqyT97rqVp0ZrbCcMlm9Ocysidw8YBAPD0alHOtKn/J3DKpQ972HNf3PCQ109PFgabsSlNl8Je3rEbHY5oB6qkZnA09cn0gbZW9ohdBBqohF6jZuMD3c8L+qvDLDuIAMwUVMTUpUcF0342CmDJg85Im8B1wjfcaaYQpP9xd7yncD5t1gUb1c5mFqTZYNQK6VC5G1J6Ywtf5x+7uvdJvGBvxZUqcGLkOB8YGnst49tBAuG4Fw6dUrvyeo=
-  bucket: ''
-  key: ''
-  bundle_type: zip
-  application: defender
-  deployment_group: ''
-  on:
-    repo: INTEGRITY-One/defender
->>>>>>> 9a68dfa4d55babe11b9cc36b01ef1573cdfd95ec

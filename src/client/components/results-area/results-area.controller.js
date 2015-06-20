@@ -10,10 +10,9 @@ angular.module('defenderApp')
     $scope.recallResultsList = [];
     $http.get('/api/things')
       .success(function (recallResultsList) {
-      $scope.recallResultsList = recallResultsList;
+      $scope.recallResultsList = recallResultsList.results;
     })
       .error(function () {
         $scope.errorHappenedResultsArea = true;
-        console.log('got an error')
     });
   });
