@@ -4,6 +4,7 @@ node_js:
 - '0.11'
 before_script:
 - npm install -g bower grunt-cli
+- cd src
 - bower install
 services: mongodb
 deploy:
