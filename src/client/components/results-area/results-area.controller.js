@@ -20,7 +20,7 @@ angular.module('defenderApp')
         .success(function (recallResultsList) {
           var response = JSON.parse(recallResultsList);
           var results = response.results;
-          $scope.totalPages = response.meta.results.total / $scope.pageSize;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
           $scope.recallResultsList = results;
         })
         .error(function () {
