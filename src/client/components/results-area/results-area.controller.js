@@ -10,7 +10,7 @@ angular.module('defenderApp')
     $scope.recallResultsList = [];
     $http.get('/api/things')
       .success(function (recallResultsList) {
-      $scope.recallResultsList = JSON.parse(recallResultsList);
+      $scope.recallResultsList = JSON.parse(recallResultsList).results;
  console.log(recallResultsList);
 
     })

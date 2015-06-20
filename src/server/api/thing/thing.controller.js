@@ -13,16 +13,21 @@ var _http = require('http');
 exports.index = function(req, res) {
   //var sector = escape("FOOD");
   console.log('things.controller: Received: PARAMS='+req.params.toString());
-  //req.params.get("skip")
+  var skipcount = "0";
+  var testval = req.params;
+  if (testval.length > 0)
+    skipcount = testval.get("skip");
   //var shortDesc = escape("CHICKENS, (EXCL BROILERS) - INVENTORY");
   //var shortDesc = escape(req.params.commodity);
   //var searchQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=reason_for_recall:ice+cream";
-  var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=10&skip=0";
+  var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=10&skip=" + skipcount;
 
-  var curDate = new Date();
-  var thirtyDaysAgo = curDate-30;
-  //console.log("formatted: " + Date.format(thirtyDaysAgo, "Y-m-d"));
-  var recentQueryString = baseQueryString + "&search=report_date:[2015-05-20+TO+2015-06-20]"
+  var curDate = Date.now;
+  var thirtyDaysAgo = new Date(curDate-30);
+  console.log("unformatted: " + curDate + ", " + thirtyDaysAgo);
+  /*console.log("formatted: " + curDate.getFullYear()+"-"+curDate.getMonth()+"-"+curDate.getDay() + ", " +
+      thirtyDaysAgo.getFullYear()+"-"+thirtyDaysAgo.getMonth()+"-"+thirtyDaysAgo.getDay());*/
+  var recentQueryString = baseQueryString + "&search=report_date:[2015-05-20+TO+2015-06-20]";
   /*var recentQueryString = baseQueryString + "&search=report_date:[" +
         thirtyDaysAgo.format("Y-m-d") + "+TO+" + curDate.format("Y-m-d") + "]";*/
   var host = "api.fda.gov";
