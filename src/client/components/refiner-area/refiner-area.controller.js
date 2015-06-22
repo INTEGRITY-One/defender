@@ -32,8 +32,11 @@ angular.module('defenderApp')
     "Corn"];
 
     $scope.refineRandomResults = function() {
-      var r = Math.floor((Math.random() * randomResultList.length));
-      $('#input-refiner').val(randomResultList[r]);
+      var newTerm = $('#input-refiner').val();
+      while(newTerm === $('#input-refiner').val()) {
+        var r = Math.floor((Math.random() * randomResultList.length));
+        $('#input-refiner').val(randomResultList[r]);
+      }
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
       console.log(defender.searchTerm);
