@@ -42,7 +42,7 @@ angular.module('defenderApp')
 
     $scope.currSearchTerm = "";
     $scope.getApiSearchTerm = function() {
-      $http.get('/api/things/reason_for_recall:' + $scope.currSearchTerm + "+product_description:" + $scope.currSearchTerm + "+recalling_firm:" + $scope.currSearchTerm)
+      $http.get('/api/things/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
         .success(function (recallResultsList) {
           var response = JSON.parse(recallResultsList);
           var results = response.results;

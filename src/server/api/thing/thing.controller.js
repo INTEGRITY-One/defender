@@ -37,7 +37,7 @@ exports.index = function(req, res) {
   if(req.params.search !== undefined && req.params.search !== "") {
     var searchParam = req.params.search;
     while(searchParam.indexOf(' ') !== -1) {
-      searchParam = searchParam.replace(' ','+');
+      searchParam = searchParam.replace(' ','%20');
     }
     recentQueryString += "+AND+(" + searchParam + ")";
   }
@@ -93,6 +93,7 @@ exports.index = function(req, res) {
       return res.json(200, JSON.stringify(foodResults));
     })
   });
+
 
   // Query Drug API
   /*qryReq = http.get({host: host, path: qrypath_drug}, function(qryResp) {
