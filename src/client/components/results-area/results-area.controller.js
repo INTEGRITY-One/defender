@@ -61,6 +61,9 @@ angular.module('defenderApp')
         $scope.currSearchTerm = defender.searchTerm;
 
         if($scope.currSearchTerm !== "") {
+          $('#big-query-text-value').text("0");
+          $('#big-query-text-label').text($scope.currSearchTerm + ' recalls in the past 90 days');
+          $scope.recallResultsList = [];
           $scope.getApiSearchTerm();
         }
         else {
