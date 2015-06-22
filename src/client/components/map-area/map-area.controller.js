@@ -8,7 +8,7 @@ angular.module('defenderApp')
     // Initialize some variables
     var map;
     var pane;
-    var recallResultsList = [];
+    $scope.currResults = []; // Resultset from module
     var features = new L.mapbox.FeatureLayer();
 
     // Custom icon for Food recalls
@@ -20,38 +20,38 @@ angular.module('defenderApp')
     // Provide your access token
     L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
     var geocoder = L.mapbox.geocoder('mapbox.places');
+
     // Create a map in the div #map
     map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+    window.setInterval(function() {
+      if(defender.currentResults !== undefined) {
+        if (defender.currentResults !== $scope.currResults) {
+          console.log('found new results: ' + defender.currentResults);
+          $scope.currResults = defender.currentResults;
 
-    // TEMPORARY: just until var is avail. in higher-level scope
-    $scope.getApi = function() {
-      $http.get('/api/things')
-        .success(function (recallResults) {
-          // First, parse the return value of the API call
-          /*var response = JSON.parse(recallResults);
-          var results = response.results;*/
-          recallResultsList = JSON.parse(recallResults).results;
+          $scope.updateFeatures($scope.currResults);
+        }
+      }
+    },500);
 
-          // Geocode the City, ST of the results to build up the FeatureLayer
-          features.clearLayers();
-          for (var i = recallResultsList.length - 1; i >= 0; i--) {
-            geocoder.query(recallResultsList[i].city + ", " + recallResultsList[i].state, addToLayer);
-          }
+    $scope.updateFeatures = function (results) {
+      // Geocode the City, ST of the results to build up the FeatureLayer
+      features.clearLayers();
+      for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
+        geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addToLayer);
 
-          // Finally, all the completed FeatureLayer to the map
-          features.addTo(map);
-        })
-        .error(function () {
-          $scope.errorHappenedResultsArea = true;
-        });
-    };
-    $scope.getApi(); // Invoke it!
+        // De-duplication
+
+      }
+
+      // Finally, all the completed FeatureLayer to the map
+      features.addTo(map);
+    }
 
     // Function for building up the FeatureLayer
     function addToLayer(err, data) {
       L.marker(data.latlng, {icon: foodIcon}).addTo(features);
     }
-
 
     //L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
     //var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
