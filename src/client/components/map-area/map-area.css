@@ -1,6 +1,7 @@
 .map-col {
+  horiz-align:center;
   padding:15px;
   width:100%;
 }
 
-#map { height: 300px; width: 500px; }
+#map { height: 450px; width: 650px; }
