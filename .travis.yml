@@ -5,6 +5,8 @@ before_install:
 - npm install -g bower grunt-cli
 - cd src
 - bower install
+- bower install mapbox.js
+- bower install bootstrap-theme-bootswatch-flatly
 install:
 - pwd
 - npm install
