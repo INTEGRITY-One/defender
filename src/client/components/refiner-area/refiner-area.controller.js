@@ -13,9 +13,26 @@ angular.module('defenderApp')
       console.log(defender.searchTerm);
     }
 
-    var randomResultList = ["ice cream", "cheese"]
+    var randomResultList = [
+    "ice cream",
+    "cheese",
+    "Bread",
+    "Burrito",
+    "Beef",
+    "Pork",
+    "Chicken",
+    "Dip",
+    "Whole",
+    "Health one",
+    "Sugar",
+    "Milk",
+    "Listeria",
+    "Organic",
+    "Soup",
+    "Corn"];
+
     $scope.refineRandomResults = function() {
-      var r = Math.floor((Math.random() * 2));
+      var r = Math.floor((Math.random() * randomResultList.length));
       $('#input-refiner').val(randomResultList[r]);
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
