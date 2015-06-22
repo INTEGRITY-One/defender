@@ -13,8 +13,8 @@ angular.module('defenderApp')
     // TEMPORARY: just until var is avail. in higher-level scope
     $scope.getApi = function() {
       $http.get('/api/things')
-        .success(function (recallResultsList) {
-          $scope.recallResultsList = JSON.parse(recallResultsList).results;
+        .success(function (recallResults) {
+          $scope.recallResultsList = JSON.parse(recallResults).results;
         })
         .error(function () {
           $scope.errorHappenedResultsArea = true;
@@ -22,32 +22,30 @@ angular.module('defenderApp')
     };
     $scope.getApi();
 
-    $scope.initMap = function() {
-
+    //$scope.initMap = function() {
       // Provide your access token
       L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
       // Create a map in the div #map
       map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
       // Include handy Geosearch control
       //var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
-    };
+    /*};
+    $scope.initMap();*/
 
     var foodIcon = L.icon({
       iconUrl: 'assets/images/food_orange.png',
       iconSize: [30, 30]
     });
 
-
     var geocoder = L.mapbox.geocoder('mapbox.places');
     var results = new L.mapbox.FeatureLayer();
     //searchControl.on('found', function(data){
     results.clearLayers();
-    for (var i = $scope.recallResultsList.length - 1; i >= 0; i--) {
+    /*for (var i = $scope.recallResultsList.length - 1; i >= 0; i--) {
       console.log('found this: ' + $scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state);
 
       geocoder.query($scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state, addToLayer);
-    }
-
+    }*/
 
     //});*/
     function addToLayer(err, data) {
