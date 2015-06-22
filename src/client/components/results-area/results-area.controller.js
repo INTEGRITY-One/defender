@@ -1,5 +1,8 @@
 'use strict';
 
+var defender = defender || {};
+defender.currentResults = [];
+
 angular.module('defenderApp')
   .controller('ResultsAreaCtrl', function ($scope, $http) {
     //this file pull data from server and populate bootstrap grid on client
@@ -24,6 +27,7 @@ angular.module('defenderApp')
           var results = response.results;
           $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
           $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('food recalls in the past 90 days');
         })
@@ -48,6 +52,7 @@ angular.module('defenderApp')
           var results = response.results;
           $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
           $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text($scope.currSearchTerm + ' recalls in the past 90 days');
         })
