@@ -5,27 +5,26 @@
 }
 
 .refiner-box {
-  margin-top:10px;
+  margin-top:50px;
 }
 
 .refiner-area ul {
   padding:0;
+  padding-bottom:8px;
 }
 .refiner-area li {
   list-style-type: none;
   display:inline;
 
-  padding:30px;
-  padding-top:15px;
-  padding-bottom:15px;
+  padding:15px;
+  padding-top:5px;
+  padding-bottom:5px;
   font-family: 'Segoe UI Light';
   cursor:pointer;
-  font-size:22px;
+  font-size:12px;
 }
 
 .refiner-area .refiner-input-container {
-  position:absolute;
-  bottom:10px;
   width:300px;
 }
 
@@ -33,4 +32,9 @@
   width:150px;
   float:left;
   margin-right:5px;
+}
+
+.refiner-affected {
+  font-size: 18px;
+  padding-top:10px;
 }

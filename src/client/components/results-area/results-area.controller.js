@@ -18,12 +18,14 @@ angular.module('defenderApp')
     $scope.showInfoIsVisible = false;
 
     $scope.getApi = function() {
-      $http.get('/api/things?skip=30')
+      $http.get('/api/things')
         .success(function (recallResultsList) {
           var response = JSON.parse(recallResultsList);
           var results = response.results;
           $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
           $scope.recallResultsList = results;
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('food recalls in the past 90 days');
         })
         .error(function () {
           $scope.errorHappenedResultsArea = true;
@@ -37,6 +39,35 @@ angular.module('defenderApp')
     }
 
     $scope.getApi();
+
+    $scope.currSearchTerm = "";
+    $scope.getApiSearchTerm = function() {
+      $http.get('/api/things/reason_for_recall:' + $scope.currSearchTerm + "+product_description:" + $scope.currSearchTerm + "+recalling_firm:" + $scope.currSearchTerm)
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text($scope.currSearchTerm + ' recalls in the past 90 days');
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    }
+    window.setInterval(function() {
+      if(defender.searchTerm !== $scope.currSearchTerm) {
+        console.log('searched: ' + defender.searchTerm)
+        $scope.currSearchTerm = defender.searchTerm;
+
+        if($scope.currSearchTerm !== "") {
+          $scope.getApiSearchTerm();
+        }
+        else {
+          $scope.getApi();
+        }
+      }
+    },500);
 
     $('#info-container').fadeOut();
     $scope.showMoreInfo = function(idx) {
