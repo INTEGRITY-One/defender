@@ -9,13 +9,146 @@
   <div ng-hide="errorHappenedResultsArea" class=''>
     <div class='panel panel-primary'>
       <div class="panel-heading">
-        <h3>Recall Report</h3>
+        <h3>Enforcement Reports <small><p class="pull-right">Results limited to 100</p></small></h3>
       </div>
       <div class="panel-body info-area-body">
-        <div id="info-container">
-          <div id="field-report-date" class="col-sm-12">
-            <div class="col-sm-3 field field-name"></div>
-            <div class="col-sm-9 field field-value"></div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="showMoreModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="showMoreModalTitle">Modal title</h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal">
+
+                  <div class="form-group">
+                    <label for="text_reason_for_recall" class="col-sm-2 control-label">Reason For Recall</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_reason_for_recall"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_status" class="col-sm-2 control-label">Status</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_status"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_report_date" class="col-sm-2 control-label">Report Date</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_report_date"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_product_description" class="col-sm-2 control-label">Product Description</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_product_description"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_recalling_firm" class="col-sm-2 control-label">Recalling Firm</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_recalling_firm"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_distribution_pattern" class="col-sm-2 control-label">Distribution Pattern</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_distribution_pattern"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_product_quantity" class="col-sm-2 control-label">Product Quantity</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_product_quantity"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_recall_initiation_date" class="col-sm-2 control-label">Recall Initiation Date</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_recall_initiation_date"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_product_type" class="col-sm-2 control-label">Product Type</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_product_type"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_event_id" class="col-sm-2 control-label">Event ID</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_event_id"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_country" class="col-sm-2 control-label">Country</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_country"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_state" class="col-sm-2 control-label">State</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_state"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_city" class="col-sm-2 control-label">City</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_city"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_voluntary_mandated" class="col-sm-2 control-label">Voluntary Mandated</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_voluntary_mandated"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_classification" class="col-sm-2 control-label">Classification</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_classification"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_code_info" class="col-sm-2 control-label">Code Info</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_code_info"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="text_initial_firm_notification" class="col-sm-2 control-label">Initial Firm Notification</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static" id="text_initial_firm_notification"></p>
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -47,7 +180,11 @@
               <td>{{recallResults.recalling_firm}}</td>
               <td>{{recallResults.product_description}}</td>
               <td>{{recallResults.status}}</td>
-              <td><a href="#" ng-click="showMoreInfo($index)">More</a></td>
+              <td>
+                <button type="button" class="btn btn-success btn-xs more-button" data-toggle="modal" data-target="#showMoreModal" ng-click="showMoreInfo($index)">
+                  <p>More</p>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -62,6 +199,6 @@
       </nav>
 
     </div>
-
   </div>
+
 </div>
