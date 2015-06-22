@@ -5,52 +5,51 @@ angular.module('defenderApp')
     //this file configures the MapBox map to be displayed on client
 
     console.log('map.html: Attempting to load the map...');
-    // Initialize the map
+    // Initialize some variables
     var map;
     var pane;
-    //var recallResultsList = [];
+    var recallResultsList = [];
+    var features = new L.mapbox.FeatureLayer();
 
-    // TEMPORARY: just until var is avail. in higher-level scope
-    $scope.getApi = function() {
-      $http.get('/api/things')
-        .success(function (recallResults) {
-          $scope.recallResultsList = JSON.parse(recallResults).results;
-        })
-        .error(function () {
-          $scope.errorHappenedResultsArea = true;
-        });
-    };
-    $scope.getApi();
-
-    //$scope.initMap = function() {
-      // Provide your access token
-      L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-      // Create a map in the div #map
-      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
-      // Include handy Geosearch control
-      //var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
-    /*};
-    $scope.initMap();*/
-
+    // Custom icon for Food recalls
     var foodIcon = L.icon({
       iconUrl: 'assets/images/food_orange.png',
       iconSize: [30, 30]
     });
 
+    // Provide your access token
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
     var geocoder = L.mapbox.geocoder('mapbox.places');
-    var results = new L.mapbox.FeatureLayer();
-    //searchControl.on('found', function(data){
-    results.clearLayers();
-    /*for (var i = $scope.recallResultsList.length - 1; i >= 0; i--) {
-      console.log('found this: ' + $scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state);
+    // Create a map in the div #map
+    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
 
-      geocoder.query($scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state, addToLayer);
-    }*/
+    // TEMPORARY: just until var is avail. in higher-level scope
+    $scope.getApi = function() {
+      $http.get('/api/things')
+        .success(function (recallResults) {
+          // First, parse the return value of the API call
+          /*var response = JSON.parse(recallResults);
+          var results = response.results;*/
+          recallResultsList = JSON.parse(recallResults).results;
 
-    //});*/
+          // Geocode the City, ST of the results to build up the FeatureLayer
+          features.clearLayers();
+          for (var i = recallResultsList.length - 1; i >= 0; i--) {
+            geocoder.query(recallResultsList[i].city + ", " + recallResultsList[i].state, addToLayer);
+          }
+
+          // Finally, all the completed FeatureLayer to the map
+          features.addTo(map);
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+    $scope.getApi(); // Invoke it!
+
+    // Function for building up the FeatureLayer
     function addToLayer(err, data) {
-      console.log('got something!');
-      L.marker(data.latlng, {icon: foodIcon}).addTo(results);
+      L.marker(data.latlng, {icon: foodIcon}).addTo(features);
     }
 
 
