@@ -37,3 +37,13 @@
   height:500px;
   overflow-y:scroll;
 }
+
+.big-query-text {
+}
+
+.big-query-text h1 {
+  font-size:5.5em;
+}
+.big-query-text h3 {
+  font-size:2em;
+}
