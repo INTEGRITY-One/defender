@@ -9,19 +9,14 @@
 var _ = require('lodash');
 var _http = require('http');
 
+
 // Get list of recalls
 exports.index = function(req, res) {
   //var sector = escape("FOOD");
-  console.log('things.controller: Received: PARAMS='+req.params.toString());
-  console.log('things.controller: Received: PARAMS='+req.params.skip);
-  var skipcount = "0";
-  var testval = req.params;
-  if (testval.length > 0)
-    skipcount = testval.get("skip");
-  //var shortDesc = escape("CHICKENS, (EXCL BROILERS) - INVENTORY");
-  //var shortDesc = escape(req.params.commodity);
-  //var searchQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&search=reason_for_recall:ice+cream";
-  var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=10&skip=" + skipcount;
+
+  console.log('things.controller: Received: searc1h PARAMS='+req.params.search);
+
+  var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=100";
 
   var curDate = new Date();
   var yyyy = curDate.getFullYear();
@@ -29,7 +24,7 @@ exports.index = function(req, res) {
   var dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
   var formattedCurDate = yyyy.toString() + mm.toString() + dd.toString();
 
-  curDate.setDate(curDate.getDate() - 30);
+  curDate.setDate(curDate.getDate() - 90);
   yyyy = curDate.getFullYear();
   mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
   dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
@@ -38,6 +33,17 @@ exports.index = function(req, res) {
   console.log(formattedPrevDate);
   console.log(formattedCurDate);
   var recentQueryString = baseQueryString + "&search=report_date:[" + formattedPrevDate + "+TO+" + formattedCurDate + "]";
+
+  if(req.params.search !== undefined && req.params.search !== "") {
+    var searchParam = req.params.search;
+    while(searchParam.indexOf(' ') !== -1) {
+      searchParam = searchParam.replace(' ','%20');
+    }
+    recentQueryString += "+AND+(" + searchParam + ")";
+  }
+
+
+  console.log('query: ' + recentQueryString)
 
   var host = "api.fda.gov";
   var qrypath_food = "/food/enforcement.json?"+recentQueryString;
@@ -87,6 +93,7 @@ exports.index = function(req, res) {
       return res.json(200, JSON.stringify(foodResults));
     })
   });
+
 
   // Query Drug API
   /*qryReq = http.get({host: host, path: qrypath_drug}, function(qryResp) {

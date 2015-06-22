@@ -5,46 +5,56 @@ angular.module('defenderApp')
     //this file configures the MapBox map to be displayed on client
 
     console.log('map.html: Attempting to load the map...');
-    // Initialize the map
+    // Initialize some variables
     var map;
     var pane;
+    $scope.currResults = []; // Resultset from module
+    var features = new L.mapbox.FeatureLayer();
 
-    // Provide your access token
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-    // Create a map in the div #map
-    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 2); // World Map
-    // Include handy Geosearch control
-    var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
-
+    // Custom icon for Food recalls
     var foodIcon = L.icon({
-      iconUrl: 'assets/images/food.png',
+      iconUrl: 'assets/images/food_orange.png',
       iconSize: [30, 30]
     });
 
-
-     /*var results = new L.mapbox.LayerGroup().addTo(map);
-     searchControl.on('found', function(data){
-     results.clearLayers();
-     for (var i = data.results.length - 1; i >= 0; i--) {
-       results.addLayer(L.marker(data.results[i].latlng));
-     }
-     });*/
+    // Provide your access token
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
     var geocoder = L.mapbox.geocoder('mapbox.places');
-    geocoder.query('Washington, DC', showMap);
 
-    function showMap(err, data) {
-      // The geocoder can return an area, like a city, or a
-      // point, like an address. Here we handle both cases,
-      // by fitting the map bounds to an area or zooming to a point.
-      /*if (data.lbounds) {
-        map.fitBounds(data.lbounds);
-      } else if (data.latlng) {*/
-        map.setView([data.latlng[0], data.latlng[1]], 4);
+    // Create a map in the div #map
+    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+    window.setInterval(function() {
+      if(defender.currentResults !== undefined) {
+        if (defender.currentResults !== $scope.currResults) {
+          console.log('found new results: ' + defender.currentResults);
+          $scope.currResults = defender.currentResults;
 
-      //}
+          $scope.updateFeatures($scope.currResults);
+        }
+      }
+    },500);
+
+    $scope.updateFeatures = function (results) {
+      // Geocode the City, ST of the results to build up the FeatureLayer
+      features.clearLayers();
+      for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
+        geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addToLayer);
+
+        // De-duplication
+
+      }
+
+      // Finally, all the completed FeatureLayer to the map
+      features.addTo(map);
     }
-    L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
-    var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
+
+    // Function for building up the FeatureLayer
+    function addToLayer(err, data) {
+      L.marker(data.latlng, {icon: foodIcon}).addTo(features);
+    }
+
+    //L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
+    //var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
 
     // Pane for showing relevant data
     /*var info = L.control({position: 'topright'});
@@ -55,8 +65,6 @@ angular.module('defenderApp')
      };
      info.addTo(map);
      $('.update-pane').hide();*/
-
-
 
     console.log('map.html: Successfully loaded map!');
 
