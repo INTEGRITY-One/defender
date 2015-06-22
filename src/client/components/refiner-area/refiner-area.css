@@ -3,10 +3,12 @@
   background-color: #fff;
   height:200px;
 }
+
+.refiner-box {
+  margin-top:10px;
+}
+
 .refiner-area ul {
-  position:absolute;
-  left:39%;
-  top:45px;
   padding:0;
 }
 .refiner-area li {
