@@ -1,18 +1,30 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
+<div class="container-fluid">
 
   <div class="row">
     <div class="col-sm-12 refiner-area">
-
+      <div ng-include="'components/refiner-area/refiner-area.html'"></div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-12">
-      <div ng-include="'components/results-area/results-area.html'"></div>
+    <div class="">
+      <div class="col-sm-6">
+        <div ng-include="'components/map-area/map-area.html'"></div>
+      </div>
+      <div class="col-sm-6">
+        <div ng-include="'components/results-area/results-area.html'"></div>
+      </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="">
+      <div ng-include="'components/trend-item/trend-item.html'"></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="footer">

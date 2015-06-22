@@ -7,64 +7,82 @@ angular.module('defenderApp')
     //on error
     $scope.errorHappenedResultsArea = false;
 
+    //pagination
+    $scope.skip = 30;
+    $scope.pageSize = 10;
+    $scope.totalPages = 20;
+    $scope.currentPage = 1;
+
     $scope.recallResultsList = [];
-    $http.get('/api/things')
-      .success(function (recallResultsList) {
-        $scope.recallResultsList = JSON.parse(recallResultsList).results;
 
-        console.log(recallResultsList);
-      })
-      .error(function () {
-        $scope.errorHappenedResultsArea = true;
-      });
+    $scope.showInfoIsVisible = false;
 
-    // Initialize some variables...
-    $scope.showMapResultsArea = true;
-
-    var map;
-    // Initialize map after page is fully loaded
-    // $("#body").on('ready', function() {
-    console.log("Attempting to load the map...");
-    try {
-      // Workaround...
-      /*var setint = setInterval(function() {
-       //if(typeof require != undefined) {
-       clearInterval(setint);*/
-      // Initialize the map
-      //map = L.map('map');//.setView([37.78, -92.85], 4); // All of US
-
-      //L.esri.basemapLayer('Gray').addTo(map);
-
-      // Provide your access token
-      L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-      // Create a map in the div #map
-
-      /*var tiles = L.mapbox.tileLayer('http://{s}.tiles.mapbox.com/{id}/{z}/{x}/{y}.png', {
-       id: 'mapbox.light',
-       attribution: 'by me',
-       defaults: {
-         tileLayerOptions: {
-           noWrap: 'true',
-           tms: 'true'
-         }
-       },
-       noWrap: 'true'
-       });*/
-        // Create a map in the div #map
-        map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
-     /* map = L.mapbox.map('map', {
-        center: [37.78, -92.85],
-        zoom: 1 // World Map
-      });//, 'mapbox.light');*/
-      //map.setView(, 1);
-      // Include handy Geosearch control
-      var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
-      console.log('map.html: Successfully loaded map!');
-      //}
-       //}, 5000);
-    } catch (e) {
-      console.log(e)
+    $scope.getApi = function() {
+      $http.get('/api/things?skip=30')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
     }
-    //});
+    $scope.nextPage = function() {
+      $scope.currentPage = $scope.currentPage + 1;
+      $scope.skip = $scope.skip + 10;
+      $scope.getApi();
+      console.log($scope.skip)
+    }
 
+    $scope.getApi();
+
+    $('#info-container').fadeOut();
+    $scope.showMoreInfo = function(idx) {
+      console.log(idx);
+      $('#mainGrid').fadeOut();
+      $('#pagination-grid').fadeOut();
+      $('#info-container').fadeIn();
+
+      $('#field-report-date .field-name').text("Report Date");
+      $('#field-report-date .field-value').text($scope.recallResultsList[idx]['report_date']);
+    }
   });
+
+/**
+ * Ng-Repeat implementation working with number ranges.
+ *
+ * @author Umed Khudoiberdiev
+ */
+angular.module('defenderApp').directive('ngRepeatRange', ['$compile', function ($compile) {
+  return {
+    replace: true,
+    scope: { from: '=', to: '=', step: '=' },
+
+    link: function (scope, element, attrs) {
+
+      // returns an array with the range of numbers
+      // you can use _.range instead if you use underscore
+      function range(from, to, step) {
+        var array = [];
+        while (from + step <= to)
+          array[array.length] = from += step;
+
+        return array;
+      }
+
+      // prepare range options
+      var from = scope.from || 0;
+      var step = scope.step || 1;
+      var to   = scope.to || attrs.ngRepeatRange;
+
+      // get range of numbers, convert to the string and add ng-repeat
+      var rangeString = range(from, to + 1, step).join(',');
+      angular.element(element).attr('ng-repeat', 'n in [' + rangeString + ']');
+      angular.element(element).removeAttr('ng-repeat-range');
+
+      $compile(element)(scope);
+    }
+  };
+}]);
