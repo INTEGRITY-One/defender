@@ -6,7 +6,7 @@ before_install:
 - cd src
 - bower install
 - bower install mapbox.js
-- echo "1" | bower install bootstrap-theme-bootswatch-flatly
+- bower install bootstrap-theme-bootswatch-flatly
 install:
 - pwd
 - npm install
