@@ -1,9 +1,9 @@
-
-#info-container .field  {
-  border:1px solid black;
-}
-
 .info-area-body {
   height:300px;
   overflow-y:scroll;
+}
+
+.more-button {
+  padding: 8px;
+  padding-bottom: 1px;
 }

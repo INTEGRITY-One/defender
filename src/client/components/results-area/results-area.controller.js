@@ -41,12 +41,24 @@ angular.module('defenderApp')
     $('#info-container').fadeOut();
     $scope.showMoreInfo = function(idx) {
       console.log(idx);
-      $('#mainGrid').fadeOut();
-      $('#pagination-grid').fadeOut();
-      $('#info-container').fadeIn();
-
-      $('#field-report-date .field-name').text("Report Date");
-      $('#field-report-date .field-value').text($scope.recallResultsList[idx]['report_date']);
+      $('#showMoreModalTitle').text('Recall #' + $scope.recallResultsList[idx]['recall_number']);
+      $('#text_reason_for_recall').text($scope.recallResultsList[idx]['reason_for_recall']);
+      $('#text_status').text($scope.recallResultsList[idx]['status']);
+      $('#text_distribution_pattern').text($scope.recallResultsList[idx]['distribution_pattern']);
+      $('#text_product_quantity').text($scope.recallResultsList[idx]['product_quantity']);
+      $('#text_recall_initiation_date').text($scope.recallResultsList[idx]['recall_initiation_date']);
+      $('#text_state').text($scope.recallResultsList[idx]['state']);
+      $('#text_product_type').text($scope.recallResultsList[idx]['product_type']);
+      $('#text_event_id').text($scope.recallResultsList[idx]['event_id']);
+      $('#text_product_description').text($scope.recallResultsList[idx]['product_description']);
+      $('#text_country').text($scope.recallResultsList[idx]['country']);
+      $('#text_city').text($scope.recallResultsList[idx]['city']);
+      $('#text_recalling_firm').text($scope.recallResultsList[idx]['recalling_firm']);
+      $('#text_report_date').text($scope.recallResultsList[idx]['report_date']);
+      $('#text_voluntary_mandated').text($scope.recallResultsList[idx]['voluntary_mandated']);
+      $('#text_classification').text($scope.recallResultsList[idx]['classification']);
+      $('#text_code_info').text($scope.recallResultsList[idx]['code_info']);
+      $('#text_initial_firm_notification').text($scope.recallResultsList[idx]['initial_firm_notification']);
     }
   });
 
