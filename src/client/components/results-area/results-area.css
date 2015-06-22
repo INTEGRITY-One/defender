@@ -1,0 +1,9 @@
+
+.map-col {
+  padding:15px;
+  width:100%;
+}
+
+#map { position: absolute; height: 300px; width: 400px; }
+
+
