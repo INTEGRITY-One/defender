@@ -8,43 +8,54 @@ angular.module('defenderApp')
     // Initialize the map
     var map;
     var pane;
+    //var recallResultsList = [];
 
-    // Provide your access token
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-    // Create a map in the div #map
-    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 2); // World Map
-    // Include handy Geosearch control
-    var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
+    // TEMPORARY: just until var is avail. in higher-level scope
+    $scope.getApi = function() {
+      $http.get('/api/things')
+        .success(function (recallResults) {
+          $scope.recallResultsList = JSON.parse(recallResults).results;
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+    $scope.getApi();
+
+    //$scope.initMap = function() {
+      // Provide your access token
+      L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
+      // Create a map in the div #map
+      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+      // Include handy Geosearch control
+      //var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
+    /*};
+    $scope.initMap();*/
 
     var foodIcon = L.icon({
-      iconUrl: 'assets/images/food.png',
+      iconUrl: 'assets/images/food_orange.png',
       iconSize: [30, 30]
     });
 
-
-     /*var results = new L.mapbox.LayerGroup().addTo(map);
-     searchControl.on('found', function(data){
-     results.clearLayers();
-     for (var i = data.results.length - 1; i >= 0; i--) {
-       results.addLayer(L.marker(data.results[i].latlng));
-     }
-     });*/
     var geocoder = L.mapbox.geocoder('mapbox.places');
-    geocoder.query('Washington, DC', showMap);
+    var results = new L.mapbox.FeatureLayer();
+    //searchControl.on('found', function(data){
+    results.clearLayers();
+    /*for (var i = $scope.recallResultsList.length - 1; i >= 0; i--) {
+      console.log('found this: ' + $scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state);
 
-    function showMap(err, data) {
-      // The geocoder can return an area, like a city, or a
-      // point, like an address. Here we handle both cases,
-      // by fitting the map bounds to an area or zooming to a point.
-      /*if (data.lbounds) {
-        map.fitBounds(data.lbounds);
-      } else if (data.latlng) {*/
-        map.setView([data.latlng[0], data.latlng[1]], 4);
+      geocoder.query($scope.recallResultsList[i].city + ", " + $scope.recallResultsList[i].state, addToLayer);
+    }*/
 
-      //}
+    //});*/
+    function addToLayer(err, data) {
+      console.log('got something!');
+      L.marker(data.latlng, {icon: foodIcon}).addTo(results);
     }
-    L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
-    var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
+
+
+    //L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
+    //var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
 
     // Pane for showing relevant data
     /*var info = L.control({position: 'topright'});
@@ -55,8 +66,6 @@ angular.module('defenderApp')
      };
      info.addTo(map);
      $('.update-pane').hide();*/
-
-
 
     console.log('map.html: Successfully loaded map!');
 

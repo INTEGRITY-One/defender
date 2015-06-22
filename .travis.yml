@@ -25,6 +25,7 @@ notifications:
     recipients:
       - ed.hollingsworth@ionep.com
       - steven.ferrell@ionep.com
+      - steve.winkler@ionep.com
 env:
   global:
   - secure: w6fG7lfaFC3MXZcg9MFOaJmzDBmyHsLcd4JbYgwZ2aM83hVH9Efo6gbPnfxWA0So6lhpz5h4oCE+XnKbw+CQ9g54g+HRSZUorn1WjOvD/YvqEVgLHfX6666iS8y1LfMMKRIZeQeNPRd2nkmWoJ0+jIYBBjavr4vfNOevojeXvOovNvyEXBkRfw5Tnynhyoueruj++aELArZlpI4TBaQyrtOUlAoh9z6gDimtr0Git/tKDEdX7K3JYZ6CatNs0dtsQGHp0jTFYgikzd+3nDZ0+9+HZvqXiDU0d6RUfrBFk6fBF0jufqmOMKtqayQRylLyA8aBTHR/Zo5gUWaj9Zpz6zRqLXDu/8hRH4+QV+QdDb6VqkKC4MPEO8oWTPHL8uaZP/3Daf7b+Bt2BgyssYkbZJTnFIKdO6w5v4sYYkLM26UWeSWSegobXi9ImIJ3+eJoFC5lKEI/aU2t1+ZHAN2F+Jdrl1SVzzk7NdskxUtvEevLaqZ9NldywHOOIAsu0mcZZdMB7Bl47C+wr+Z2STaKB794jf8D56DP1hX3Fy1mKDGGR3xcrR7P2sfq78mgvDKBmXeJg+9qfY3DCs3UkeRAgveY4MCDZC+G7en3v5TXzkLMFIsFljBGCo1oHmHt/2a0MVHi9sqEX93BZOYhvMMgM0tpiXPFff2bI6TVTmk1O0g=
