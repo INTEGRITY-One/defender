@@ -1,55 +1,59 @@
 <div ng-controller="ResultsAreaCtrl">
 
-  <div ng-show="errorHappenedResultsArea" class='row'>
-    <div class='col-sm-9'>
+  <div ng-show="errorHappenedResultsArea" class=''>
+    <div class=''>
       <h1>Oops, something went terribly wrong!</h1>
     </div>
   </div>
 
-  <div ng-hide="errorHappenedResultsArea" class='row'>
-    <div class='col-sm-9'>
-
-      <div id="info-container">
-        <div id="field-report-date" class="col-sm-12">
-          <div class="col-sm-3 field-name"></div>
-          <div class="col-sm-9 field-value"></div>
+  <div ng-hide="errorHappenedResultsArea" class=''>
+    <div class='panel panel-primary'>
+      <div class="panel-heading">
+        <h3>Recall Report</h3>
+      </div>
+      <div class="panel-body info-area-body">
+        <div id="info-container">
+          <div id="field-report-date" class="col-sm-12">
+            <div class="col-sm-3 field field-name"></div>
+            <div class="col-sm-9 field field-value"></div>
+          </div>
         </div>
+
+        <table class="table table-striped" id="mainGrid">
+          <thead>
+            <tr>
+              <th>
+                Report Date
+              </th>
+              <th>
+                Classification
+              </th>
+              <th>
+                Recalling Firm
+              </th>
+              <th>
+                Product Description
+              </th>
+              <th>
+                Status
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat='recallResults in recallResultsList'>
+              <td>{{recallResults.report_date}}</td>
+              <td>{{recallResults.classification}}</td>
+              <td>{{recallResults.recalling_firm}}</td>
+              <td>{{recallResults.product_description}}</td>
+              <td>{{recallResults.status}}</td>
+              <td><a href="#" ng-click="showMoreInfo($index)">More</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <table class="table table-striped" id="mainGrid">
-        <thead>
-          <tr>
-            <th>
-              Report Date
-            </th>
-            <th>
-              Classification
-            </th>
-            <th>
-              Recalling Firm
-            </th>
-            <th>
-              Product Description
-            </th>
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr ng-repeat='recallResults in recallResultsList'>
-            <td>{{recallResults.report_date}}</td>
-            <td>{{recallResults.classification}}</td>
-            <td>{{recallResults.recalling_firm}}</td>
-            <td>{{recallResults.product_description}}</td>
-            <td>{{recallResults.status}}</td>
-            <td><a href="#" ng-click="showMoreInfo($index)">More</a></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <nav>
+      <nav id="pagination-grid" hidden>
         <ul class="pager">
           <li><a href="#" id="previous-page" ng-click="(currentPage==1) || (currentPage = currentPage - 1)">Previous</a></li>
           <li><a href="#" id="next-page" ng-click="(currentPage==totalPages) || nextPage()">Next</a></li>

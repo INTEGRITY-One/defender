@@ -42,10 +42,10 @@ angular.module('defenderApp')
     $scope.showMoreInfo = function(idx) {
       console.log(idx);
       $('#mainGrid').fadeOut();
+      $('#pagination-grid').fadeOut();
       $('#info-container').fadeIn();
 
       $('#field-report-date .field-name').text("Report Date");
-      console.log($scope.recallResultsList[1]['report_date'])
       $('#field-report-date .field-value').text($scope.recallResultsList[idx]['report_date']);
     }
   });

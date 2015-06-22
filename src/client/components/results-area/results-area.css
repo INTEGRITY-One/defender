@@ -1,4 +1,9 @@
 
-.info-container div  {
+#info-container .field  {
   border:1px solid black;
+}
+
+.info-area-body {
+  height:300px;
+  overflow-y:scroll;
 }
