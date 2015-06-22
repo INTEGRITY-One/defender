@@ -35,13 +35,16 @@ angular.module('defenderApp')
     },500);
 
     $scope.updateFeatures = function (results) {
+      var cities = [];
+
       // Geocode the City, ST of the results to build up the FeatureLayer
       features.clearLayers();
       for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
-        geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addToLayer);
-
         // De-duplication
-
+        if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
+          geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addToLayer);
+          cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
+        }
       }
 
       // Finally, all the completed FeatureLayer to the map
