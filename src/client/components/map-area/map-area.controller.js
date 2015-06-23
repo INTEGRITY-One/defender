@@ -3,13 +3,15 @@
 angular.module('defenderApp')
   .controller('MapAreaCtrl', function ($scope, $http) {
     //this file configures the MapBox map to be displayed on client
-
-    console.log('map.html: Attempting to load the map...');
     // Initialize some variables
     var map;
-    var pane;
     $scope.currResults = []; // Resultset from module
     var features = new L.mapbox.FeatureLayer();
+
+    var markers = [];
+    // Provide your access token
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
+    var geocoder = L.mapbox.geocoder('mapbox.places');
 
     // Custom icon for Food recalls
     var foodIcon = L.icon({
@@ -17,28 +19,34 @@ angular.module('defenderApp')
       iconSize: [30, 30]
     });
 
-    // Provide your access token
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-    var geocoder = L.mapbox.geocoder('mapbox.places');
-
     // Create a map in the div #map
-    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
-    window.setInterval(function() {
-      if(defender.currentResults !== undefined) {
-        if (defender.currentResults !== $scope.currResults) {
-          console.log('found new results: ' + defender.currentResults);
-          $scope.currResults = defender.currentResults;
+    var initMap = function () {
+      console.log('map.html: Attempting to load the map...');
+      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
 
-          $scope.updateFeatures($scope.currResults);
+      // Looks for data updates from component scope
+      window.setInterval(function () {
+        if (defender.currentResults !== undefined) {
+          if (defender.currentResults !== $scope.currResults) {
+            console.log('found new results: ' + defender.currentResults);
+            $scope.currResults = defender.currentResults;
+            //$scope.affectedStates = defender.affectedStates;
+            //$scope.affectedCountries = defender.affectedForeignCountries;
+
+            // Update the map with new data
+            $scope.updateFeatures($scope.currResults);
+            //$scope.updateAffectedAreas($scope.affectedStates, $scope.affectedCountries);
+            console.log('map.html: Successfully updated map!');
+          }
         }
-      }
-    },500);
+      }, 1000); // ...every second
+    };
 
     $scope.updateFeatures = function (results) {
-      var cities = [];
+      clearMap();
 
       // Geocode the City, ST of the results to build up the FeatureLayer
-      features.clearLayers();
+      var cities = [];
       for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
         // De-duplication
         if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
@@ -47,29 +55,73 @@ angular.module('defenderApp')
         }
       }
 
-      // Finally, all the completed FeatureLayer to the map
-      features.addTo(map);
+      features = L.featureGroup(markers)
+        .bindPopup('Hello world!');
+
+      features.on('ready', function () {
+        // featureLayer.getBounds() returns the corners of the furthest-out markers,
+        // and map.fitBounds() makes sure that the map contains these.
+        features.addTo(map);
+        map.fitBounds(features.getBounds());
+      });
+
+    };
+
+    // Clear the map
+    function clearMap() {
+      // Handle case where map does not yet have Layers
+      if (map.layers !== undefined)
+        /*for (var i = 0; i < map.layers.length; i++) {
+          map.removeLayer(map.layers[i]);
+        }*/
+        map.removeLayer(features);
+
+      // Clear markers more elegantly here!
+      markers = [];
     }
+
 
     // Function for building up the FeatureLayer
     function addToLayer(err, data) {
-      L.marker(data.latlng, {icon: foodIcon}).addTo(features);
-    }
 
-    //L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
-    //var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
+      var marker = L.marker(data.latlng, {
+       icon: foodIcon,
+       properties: {
+       title: data
+       }
+      });
+      marker.bindPopup('Hello world!');
+      markers.push(marker);
 
-    // Pane for showing relevant data
-    /*var info = L.control({position: 'topright'});
-     info.onAdd = function (map) {
-     pane = L.DomUtil.create('div', 'info update-pane'); // create a div with a class "info"
-     pane.innerHTML += 'No State Selected'; // Initial text
-     return pane;
-     };
-     info.addTo(map);
-     $('.update-pane').hide();*/
 
-    console.log('map.html: Successfully loaded map!');
+      /*features.on('ready', function(layer) {
+
+        // here you call `bindPopup` with a string of HTML you create - the feature
+        // properties declared above are available under `layer.feature.properties`
+        var content = '<h2>A ferry ride!<\/h2>' +
+          '<p>From: ' + layer.feature.properties.from + '<br \/>' +
+          'to: ' + layer.feature.properties.to + '<\/p>';
+        layer.bindPopup(content);
+      });*/
+
+      // Finally, all the completed FeatureLayer to the map
+      //features.addTo(map);
+
+     /* L.marker(data.latlng, {
+        icon: foodIcon,
+        properties: {
+          title: 'Hello world!'
+        }
+      }).on('mouseover', function(e) {
+        e.layer.openPopup();
+      }).on('mouseout', function(e) {
+        e.layer.closePopup();
+      }).addTo(features);*/
+
+
+    };
+    
+
 
     /*$scope.processor = function(rawData, input, output) {
      var geojsonFeatureCollection = {
