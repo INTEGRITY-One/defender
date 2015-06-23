@@ -70,17 +70,6 @@ angular.module('defenderApp')
           cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
         }
       }
-
-
-      /*features = L.featureGroup(markers).on('ready', function () {
-        console.log('map.html: markers length = ' + markers.length);
-        // featureLayer.getBounds() returns the corners of the furthest-out markers,
-        // and map.fitBounds() makes sure that the map contains these.
-        console.log('map.html: features is ready!');
-        //features.addTo(map);
-
-      });*/
-
     };
 
     $scope.updateAffectedAreas = function (states, countries) {
@@ -96,37 +85,6 @@ angular.module('defenderApp')
         // Geocode the ST, only if 1 or more are affected
         if (curStateValue > 0)
           geocoder.query(curState + ", United States", addArea);
-
-        // Augment existing State feature with info. needed for "heatmap"
-        /*$scope.cropLayerGroup.clearLayers(); // "Resets" the map before displaying new crop data
-         states.find()
-         .layers('2')
-         .text(curState)
-         .run(function(error, featureCollection) {
-
-
-         for(var i = 0; i < featureCollection.features.length; i++) {
-         for(var j = 0; j < data.length; j++) {
-         if(featureCollection.features[i].properties.STATE_NAME.toUpperCase() === data[j][input].toUpperCase()) {
-         stateValues = [];
-         for(var k = 0; k < data.length; k++) {
-         if(stateValues[data[k][input]] === undefined)
-         stateValues[data[k][input]] = 0;
-         stateValues[data[k][input]] += data[k][output];
-         }
-         curStateValue = stateValues[data[j][input]];
-
-         // Add the layers to the cropLayerGroup, so they can be controlled as a unit
-         $scope.cropLayerGroup.addLayer(new L.GeoJSON(featureCollection.features[i], {
-         style: style(curStateValue, 0), //maxCropDataValue
-         onEachFeature: $scope.onEachFeature
-         }));
-         }
-         }
-         }
-         });
-         // Add the assembled LayerGroup to the map all at once
-         $scope.cropLayerGroup.addTo(map);*/
       }
       // Update the countries
       for (var i = countries.length - 1; i >= 0; i--) {
@@ -137,8 +95,6 @@ angular.module('defenderApp')
         // Geocode the Country, only if 1 or more are affected
         if (curCountryValue > 0)
           geocoder.query(curCountry, addArea);
-
-
       }
     }
     // Clear the map
@@ -164,21 +120,18 @@ angular.module('defenderApp')
       var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
 
       // Choose which icon to use
-      var theIcon = foodIcon;
-      /*if($('#selector-food').hasClass('selected'))
+      var theIcon = foodIcon; // default
+      if($('#selector-food').hasClass('selected'))
         theIcon = foodIcon;
       if($('#selector-drug').hasClass('selected'))
         theIcon = drugIcon;
       if($('#selector-device').hasClass('selected'))
-        theIcon = devIcon;*/
+        theIcon = devIcon;
 
-      console.log('trying to create marker');
       L.marker(data.latlng, {
-       icon: theIcon,
-       properties: {
-        title: data
-       }
-      }).bindPopup(content).addTo(features);
+       icon: theIcon
+      }).addTo(features);
+    //.bindPopup(content).addTo(features);
       map.fitBounds(features.getBounds());
     }
 
@@ -196,59 +149,6 @@ angular.module('defenderApp')
       }).bindPopup(content).addTo(areas);
       map.fitBounds(areas.getBounds());
     }
-
-    /*$scope.processor = function(rawData, input, output) {
-     var geojsonFeatureCollection = {
-     type: 'FeatureCollection',
-     features: []
-     };
-
-     var data = angular.fromJson(rawData);
-     console.log('map.controller: Count is: ' + data.length);
-
-     var stateValues = [];
-     for(var i = 0; i < data.length; i++) {
-     if(stateValues[data[i][input]] === undefined)
-     stateValues[data[i][input]] = 0;
-     stateValues[data[i][input]] += data[i][output];
-     }
-     console.log('map.controller: stateValues=' + stateValues);
-
-     for (var i = data.length - 1; i >= 0; i--) {
-     var curState = data[i][input];
-     var curStateValue = stateValues[data[i][input]];
-     console.log('map.controller: ' + curState + ' -- ' + curStateValue);
-
-     // Augment existing State feature with info. needed for "heatmap"
-     $scope.cropLayerGroup.clearLayers(); // "Resets" the map before displaying new crop data
-     states.find()
-     .layers('2')
-     .text(curState)
-     .run(function(error, featureCollection) {
-     for(var i = 0; i < featureCollection.features.length; i++) {
-     for(var j = 0; j < data.length; j++) {
-     if(featureCollection.features[i].properties.STATE_NAME.toUpperCase() === data[j][input].toUpperCase()) {
-     stateValues = [];
-     for(var k = 0; k < data.length; k++) {
-     if(stateValues[data[k][input]] === undefined)
-     stateValues[data[k][input]] = 0;
-     stateValues[data[k][input]] += data[k][output];
-     }
-     curStateValue = stateValues[data[j][input]];
-
-     // Add the layers to the cropLayerGroup, so they can be controlled as a unit
-     $scope.cropLayerGroup.addLayer(new L.GeoJSON(featureCollection.features[i], {
-     style: style(curStateValue, 0), //maxCropDataValue
-     onEachFeature: $scope.onEachFeature
-     }));
-     }
-     }
-     }
-     });
-     // Add the assembled LayerGroup to the map all at once
-     $scope.cropLayerGroup.addTo(map);
-     }*/
-    //on error
     $scope.errorHappenedMapArea = false;
   }
 );
