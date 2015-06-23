@@ -65,6 +65,7 @@ angular.module('defenderApp')
       for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
         // De-duplication
         if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
+          console.log("trying to geocode this" + $scope.currResults[i].city + ", " + $scope.currResults[i].state);
           geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addCity);
           cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
         }
@@ -160,35 +161,40 @@ angular.module('defenderApp')
     function addCity(err, data) {
       // here you call `bindPopup` with a string of HTML you create - the feature
       // properties declared above are available under `layer.feature.properties`
-      var content = "Some recalls here: " + data.results.query[0];
+      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
 
       // Choose which icon to use
-      var theIcon;
-      if($('#selector-food').hasClass('selected'))
+      var theIcon = foodIcon;
+      /*if($('#selector-food').hasClass('selected'))
         theIcon = foodIcon;
       if($('#selector-drug').hasClass('selected'))
         theIcon = drugIcon;
       if($('#selector-device').hasClass('selected'))
-        theIcon = devIcon;
+        theIcon = devIcon;*/
 
+      console.log('trying to create marker');
       L.marker(data.latlng, {
        icon: theIcon,
        properties: {
         title: data
        }
       }).bindPopup(content).addTo(features);
-      if (features !== undefined && features.length > 0)
-        map.fitBounds(features.getBounds());
+      map.fitBounds(features.getBounds());
     }
 
     function addArea(err, data) {
       // here you call `bindPopup` with a string of HTML you create - the feature
       // properties declared above are available under `layer.feature.properties`
-      var content = "Affected value: " + data.results.query[0];
+      var content = data.results.query[0] + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
 
-      L.marker(data.latlng).bindPopup(content).addTo(areas);
-      if (areas !== undefined && areas.length > 0)
-        map.fitBounds(areas.getBounds());
+      L.circleMarker(data.latlng, {
+        icon: L.mapbox.marker.icon({
+          'marker-color': '#f22',
+          'marker-symbol': 'circle-stroked'
+        }),
+        radius: $scope.affectedCountries[data.results.query[0]]*map.getZoom()
+      }).bindPopup(content).addTo(areas);
+      map.fitBounds(areas.getBounds());
     }
 
     /*$scope.processor = function(rawData, input, output) {
