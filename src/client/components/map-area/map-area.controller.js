@@ -6,7 +6,8 @@ angular.module('defenderApp')
     // Initialize some variables
     var map;
     $scope.currResults = []; // Resultset from module
-    var features = new L.mapbox.FeatureLayer();
+    var features;// = new L.FeatureGroup();
+    var areas;
 
     var markers = [];
     // Provide your access token
@@ -18,11 +19,25 @@ angular.module('defenderApp')
       iconUrl: 'assets/images/food_orange.png',
       iconSize: [30, 30]
     });
+    // Custom icon for Drug recalls
+    var drugIcon = L.icon({
+      iconUrl: 'assets/images/drug_blue.png',
+      iconSize: [30, 30]
+    });
+    // Custom icon for Food recalls
+    var devIcon = L.icon({
+      iconUrl: 'assets/images/device_green.png',
+      iconSize: [30, 30]
+    });
 
     // Create a map in the div #map
-    var initMap = function () {
+    $scope.initMap = function () {
       console.log('map.html: Attempting to load the map...');
       map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+      /*map.on("layeradd", function() {
+        if (features !== undefined)
+          map.fitBounds(features.getBounds());
+      });*/
 
       // Looks for data updates from component scope
       window.setInterval(function () {
@@ -30,12 +45,12 @@ angular.module('defenderApp')
           if (defender.currentResults !== $scope.currResults) {
             console.log('found new results: ' + defender.currentResults);
             $scope.currResults = defender.currentResults;
-            //$scope.affectedStates = defender.affectedStates;
-            //$scope.affectedCountries = defender.affectedForeignCountries;
+            $scope.affectedStates = defender.affectedStates;
+            $scope.affectedCountries = defender.affectedForeignCountries;
 
             // Update the map with new data
+            $scope.updateAffectedAreas($scope.affectedStates, $scope.affectedCountries);
             $scope.updateFeatures($scope.currResults);
-            //$scope.updateAffectedAreas($scope.affectedStates, $scope.affectedCountries);
             console.log('map.html: Successfully updated map!');
           }
         }
@@ -50,78 +65,131 @@ angular.module('defenderApp')
       for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
         // De-duplication
         if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
-          geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addToLayer);
+          geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addCity);
           cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
         }
       }
 
-      features = L.featureGroup(markers)
-        .bindPopup('Hello world!');
 
-      features.on('ready', function () {
+      /*features = L.featureGroup(markers).on('ready', function () {
+        console.log('map.html: markers length = ' + markers.length);
         // featureLayer.getBounds() returns the corners of the furthest-out markers,
         // and map.fitBounds() makes sure that the map contains these.
-        features.addTo(map);
-        map.fitBounds(features.getBounds());
-      });
+        console.log('map.html: features is ready!');
+        //features.addTo(map);
+
+      });*/
 
     };
 
+    $scope.updateAffectedAreas = function (states, countries) {
+      console.log('map.html: Affected states - ' + states);
+      console.log('map.html: Affected countries = ' + countries);
+
+      // Update the states
+      for (var i = states.length - 1; i >= 0; i--) {
+        var curState = states[i];
+        var curStateValue = states[curState];
+        console.log('map.controller: ' + curState + ' -- ' + curStateValue);
+
+        // Geocode the ST, only if 1 or more are affected
+        if (curStateValue > 0)
+          geocoder.query(curState + ", United States", addArea);
+
+        // Augment existing State feature with info. needed for "heatmap"
+        /*$scope.cropLayerGroup.clearLayers(); // "Resets" the map before displaying new crop data
+         states.find()
+         .layers('2')
+         .text(curState)
+         .run(function(error, featureCollection) {
+
+
+         for(var i = 0; i < featureCollection.features.length; i++) {
+         for(var j = 0; j < data.length; j++) {
+         if(featureCollection.features[i].properties.STATE_NAME.toUpperCase() === data[j][input].toUpperCase()) {
+         stateValues = [];
+         for(var k = 0; k < data.length; k++) {
+         if(stateValues[data[k][input]] === undefined)
+         stateValues[data[k][input]] = 0;
+         stateValues[data[k][input]] += data[k][output];
+         }
+         curStateValue = stateValues[data[j][input]];
+
+         // Add the layers to the cropLayerGroup, so they can be controlled as a unit
+         $scope.cropLayerGroup.addLayer(new L.GeoJSON(featureCollection.features[i], {
+         style: style(curStateValue, 0), //maxCropDataValue
+         onEachFeature: $scope.onEachFeature
+         }));
+         }
+         }
+         }
+         });
+         // Add the assembled LayerGroup to the map all at once
+         $scope.cropLayerGroup.addTo(map);*/
+      }
+      // Update the countries
+      for (var i = countries.length - 1; i >= 0; i--) {
+        var curCountry = countries[i];
+        var curCountryValue = countries[curCountry];
+        console.log('map.controller: ' + curCountry + ' -- ' + curCountryValue);
+
+        // Geocode the Country, only if 1 or more are affected
+        if (curCountryValue > 0)
+          geocoder.query(curCountry, addArea);
+
+
+      }
+    }
     // Clear the map
     function clearMap() {
       // Handle case where map does not yet have Layers
       if (map.layers !== undefined)
-        /*for (var i = 0; i < map.layers.length; i++) {
+        for (var i = 0; i < map.layers.length; i++) {
           map.removeLayer(map.layers[i]);
-        }*/
-        map.removeLayer(features);
+        }
+      console.log('map.html: Map cleared!');
 
-      // Clear markers more elegantly here!
+      // Clear features and markers more elegantly here!
       markers = [];
+      features = new L.FeatureGroup().addTo(map); // Re-initializes
+      areas = new L.FeatureGroup().addTo(map);
     }
 
 
     // Function for building up the FeatureLayer
-    function addToLayer(err, data) {
+    function addCity(err, data) {
+      // here you call `bindPopup` with a string of HTML you create - the feature
+      // properties declared above are available under `layer.feature.properties`
+      var content = "Some recalls here: " + data.results.query[0];
 
-      var marker = L.marker(data.latlng, {
-       icon: foodIcon,
+      // Choose which icon to use
+      var theIcon;
+      if($('#selector-food').hasClass('selected'))
+        theIcon = foodIcon;
+      if($('#selector-drug').hasClass('selected'))
+        theIcon = drugIcon;
+      if($('#selector-device').hasClass('selected'))
+        theIcon = devIcon;
+
+      L.marker(data.latlng, {
+       icon: theIcon,
        properties: {
-       title: data
+        title: data
        }
-      });
-      marker.bindPopup('Hello world!');
-      markers.push(marker);
+      }).bindPopup(content).addTo(features);
+      if (features !== undefined && features.length > 0)
+        map.fitBounds(features.getBounds());
+    }
 
+    function addArea(err, data) {
+      // here you call `bindPopup` with a string of HTML you create - the feature
+      // properties declared above are available under `layer.feature.properties`
+      var content = "Affected value: " + data.results.query[0];
 
-      /*features.on('ready', function(layer) {
-
-        // here you call `bindPopup` with a string of HTML you create - the feature
-        // properties declared above are available under `layer.feature.properties`
-        var content = '<h2>A ferry ride!<\/h2>' +
-          '<p>From: ' + layer.feature.properties.from + '<br \/>' +
-          'to: ' + layer.feature.properties.to + '<\/p>';
-        layer.bindPopup(content);
-      });*/
-
-      // Finally, all the completed FeatureLayer to the map
-      //features.addTo(map);
-
-     /* L.marker(data.latlng, {
-        icon: foodIcon,
-        properties: {
-          title: 'Hello world!'
-        }
-      }).on('mouseover', function(e) {
-        e.layer.openPopup();
-      }).on('mouseout', function(e) {
-        e.layer.closePopup();
-      }).addTo(features);*/
-
-
-    };
-    
-
+      L.marker(data.latlng).bindPopup(content).addTo(areas);
+      if (areas !== undefined && areas.length > 0)
+        map.fitBounds(areas.getBounds());
+    }
 
     /*$scope.processor = function(rawData, input, output) {
      var geojsonFeatureCollection = {
