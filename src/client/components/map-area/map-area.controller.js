@@ -84,7 +84,7 @@ angular.module('defenderApp')
 
         // Geocode the ST, only if 1 or more are affected
         if (curStateValue > 0)
-          geocoder.query(curState + ", United States", addArea);
+          geocoder.query(curState + ", United States", addState);
       }
       // Update the countries
       for (var i = countries.length - 1; i >= 0; i--) {
@@ -94,7 +94,7 @@ angular.module('defenderApp')
 
         // Geocode the Country, only if 1 or more are affected
         if (curCountryValue > 0)
-          geocoder.query(curCountry, addArea);
+          geocoder.query(curCountry, addCountry);
       }
     }
     // Clear the map
@@ -130,12 +130,27 @@ angular.module('defenderApp')
 
       L.marker(data.latlng, {
        icon: theIcon
-      }).addTo(features);
-    //.bindPopup(content).addTo(features);
+      }).addTo(features);//.bindPopup(content);
       map.fitBounds(features.getBounds());
     }
 
-    function addArea(err, data) {
+    function addState(err, data) {
+      // here you call `bindPopup` with a string of HTML you create - the feature
+      // properties declared above are available under `layer.feature.properties`
+      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
+
+      L.circleMarker(data.latlng, {
+        icon: L.mapbox.marker.icon({
+          'marker-color': '#f22',
+          'marker-symbol': 'circle-stroked'
+        }),
+        radius: map.getZoom()/$scope.affectedStates[data.results.query[0]]
+      }).bindPopup(content).addTo(areas);
+      map.fitBounds(areas.getBounds());
+    }
+    $scope.errorHappenedMapArea = false;
+
+    function addCountry(err, data) {
       // here you call `bindPopup` with a string of HTML you create - the feature
       // properties declared above are available under `layer.feature.properties`
       var content = data.results.query[0] + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
@@ -145,7 +160,7 @@ angular.module('defenderApp')
           'marker-color': '#f22',
           'marker-symbol': 'circle-stroked'
         }),
-        radius: $scope.affectedCountries[data.results.query[0]]*map.getZoom()
+        radius: map.getZoom()/$scope.affectedCountries[data.results.query[0]]
       }).bindPopup(content).addTo(areas);
       map.fitBounds(areas.getBounds());
     }
