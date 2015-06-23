@@ -3,15 +3,20 @@
   <div class="refiner-box">
 
     <ul>
-      <li class="btn btn-info">FOOD</li>
-      <li class="btn btn-default disabled">DRUG</li>
-      <li class="btn btn-default disabled">DEVICE</li>
+      <li id="selector-food" ng-click="selectFood()" class="btn btn-danger selected">FOOD</li>
+      <li id="selector-drug" ng-click="selectDrug()" class="btn btn-default">DRUG</li>
+      <li id="selector-device" ng-click="selectDevice()" class="btn btn-default">DEVICE</li>
     </ul>
 
 
     <div class="refiner-input-container">
-      <input type="text" class="refine-input form-control" placeholder="Refine">
-      <button class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+      <input type="text" class="refine-input form-control" id="input-refiner" placeholder="Refine">
+      <button data-toggle="tooltip" data-placement="top" title="Refine" class="btn btn-primary" id="btn-refiner" ng-click="refineResults()"><span class="glyphicon glyphicon-search"></span></button>
+      <button data-toggle="tooltip" data-placement="top" title="Surprise Me!" class="btn btn-info" id="btn-refiner-random" ng-click="refineRandomResults()"><span class="glyphicon glyphicon-random"></span></button>
+    </div>
+
+    <div class="refiner-affected checkbox-inline">
+      <input type="checkbox">Include Affected Areas
     </div>
 
   </div>

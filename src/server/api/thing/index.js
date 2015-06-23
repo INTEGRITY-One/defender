@@ -6,6 +6,14 @@ var controller = require('./thing.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
+router.get('/food', controller.getFood);
+router.get('/food/:search', controller.getFood);
+router.get('/drug', controller.getDrug);
+router.get('/drug/:search', controller.getDrug);
+router.get('/device', controller.getDevice);
+router.get('/device/:search', controller.getDevice);
+
+
 /*router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.put('/:id', controller.update);

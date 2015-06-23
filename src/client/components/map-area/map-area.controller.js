@@ -3,115 +3,152 @@
 angular.module('defenderApp')
   .controller('MapAreaCtrl', function ($scope, $http) {
     //this file configures the MapBox map to be displayed on client
-
-    console.log('map.html: Attempting to load the map...');
-    // Initialize the map
+    // Initialize some variables
     var map;
-    var pane;
+    $scope.currResults = []; // Resultset from module
+    var features;// = new L.FeatureGroup();
+    var areas;
 
+    var markers = [];
     // Provide your access token
     L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
-    // Create a map in the div #map
-    map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 2); // World Map
-    // Include handy Geosearch control
-    var searchControl = new L.mapbox.geocoderControl('mapbox.places').addTo(map);
+    var geocoder = L.mapbox.geocoder('mapbox.places');
 
+    // Custom icon for Food recalls
     var foodIcon = L.icon({
-      iconUrl: 'assets/images/food.png',
+      iconUrl: 'assets/images/food_orange.png',
+      iconSize: [30, 30]
+    });
+    // Custom icon for Drug recalls
+    var drugIcon = L.icon({
+      iconUrl: 'assets/images/drug_blue.png',
+      iconSize: [30, 30]
+    });
+    // Custom icon for Food recalls
+    var devIcon = L.icon({
+      iconUrl: 'assets/images/device_green.png',
       iconSize: [30, 30]
     });
 
+    // Create a map in the div #map
+    $scope.initMap = function () {
+      console.log('map.html: Attempting to load the map...');
+      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+      /*map.on("layeradd", function() {
+        if (features !== undefined)
+          map.fitBounds(features.getBounds());
+      });*/
 
-     /*var results = new L.mapbox.LayerGroup().addTo(map);
-     searchControl.on('found', function(data){
-     results.clearLayers();
-     for (var i = data.results.length - 1; i >= 0; i--) {
-       results.addLayer(L.marker(data.results[i].latlng));
-     }
-     });*/
-    var geocoder = L.mapbox.geocoder('mapbox.places');
-    geocoder.query('Washington, DC', showMap);
+      // Looks for data updates from component scope
+      window.setInterval(function () {
+        if (defender.currentResults !== undefined) {
+          if (defender.currentResults !== $scope.currResults) {
+            console.log('found new results: ' + defender.currentResults);
+            $scope.currResults = defender.currentResults;
+            $scope.affectedStates = defender.affectedStates;
+            $scope.affectedCountries = defender.affectedForeignCountries;
 
-    function showMap(err, data) {
-      // The geocoder can return an area, like a city, or a
-      // point, like an address. Here we handle both cases,
-      // by fitting the map bounds to an area or zooming to a point.
-      /*if (data.lbounds) {
-        map.fitBounds(data.lbounds);
-      } else if (data.latlng) {*/
-        map.setView([data.latlng[0], data.latlng[1]], 4);
+            // Update the map with new data
+            $scope.updateAffectedAreas($scope.affectedStates, $scope.affectedCountries);
+            $scope.updateFeatures($scope.currResults);
+            console.log('map.html: Successfully updated map!');
+          }
+        }
+      }, 1000); // ...every second
+    };
 
-      //}
+    $scope.updateFeatures = function (results) {
+      clearMap();
+
+      // Geocode the City, ST of the results to build up the FeatureLayer
+      var cities = [];
+      for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
+        // De-duplication
+        if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
+          console.log("trying to geocode this" + $scope.currResults[i].city + ", " + $scope.currResults[i].state);
+          geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addCity);
+          cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
+        }
+      }
+    };
+
+    $scope.updateAffectedAreas = function (states, countries) {
+      console.log('map.html: Affected states - ' + states);
+      console.log('map.html: Affected countries = ' + countries);
+
+      // Update the states
+      for (var i = states.length - 1; i >= 0; i--) {
+        var curState = states[i];
+        var curStateValue = states[curState];
+        console.log('map.controller: ' + curState + ' -- ' + curStateValue);
+
+        // Geocode the ST, only if 1 or more are affected
+        if (curStateValue > 0)
+          geocoder.query(curState + ", United States", addArea);
+      }
+      // Update the countries
+      for (var i = countries.length - 1; i >= 0; i--) {
+        var curCountry = countries[i];
+        var curCountryValue = countries[curCountry];
+        console.log('map.controller: ' + curCountry + ' -- ' + curCountryValue);
+
+        // Geocode the Country, only if 1 or more are affected
+        if (curCountryValue > 0)
+          geocoder.query(curCountry, addArea);
+      }
     }
-    L.marker([37.78, -92.85], {icon: foodIcon}).addTo(map);
-    var geocodeUrl = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places/1600+pennsylvania+ave+nw.json?access_token=pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q";
+    // Clear the map
+    function clearMap() {
+      // Handle case where map does not yet have Layers
+      if (map.layers !== undefined)
+        for (var i = 0; i < map.layers.length; i++) {
+          map.removeLayer(map.layers[i]);
+        }
+      console.log('map.html: Map cleared!');
 
-    // Pane for showing relevant data
-    /*var info = L.control({position: 'topright'});
-     info.onAdd = function (map) {
-     pane = L.DomUtil.create('div', 'info update-pane'); // create a div with a class "info"
-     pane.innerHTML += 'No State Selected'; // Initial text
-     return pane;
-     };
-     info.addTo(map);
-     $('.update-pane').hide();*/
+      // Clear features and markers more elegantly here!
+      markers = [];
+      features = new L.FeatureGroup().addTo(map); // Re-initializes
+      areas = new L.FeatureGroup().addTo(map);
+    }
 
 
+    // Function for building up the FeatureLayer
+    function addCity(err, data) {
+      // here you call `bindPopup` with a string of HTML you create - the feature
+      // properties declared above are available under `layer.feature.properties`
+      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
 
-    console.log('map.html: Successfully loaded map!');
+      // Choose which icon to use
+      var theIcon = foodIcon; // default
+      if($('#selector-food').hasClass('selected'))
+        theIcon = foodIcon;
+      if($('#selector-drug').hasClass('selected'))
+        theIcon = drugIcon;
+      if($('#selector-device').hasClass('selected'))
+        theIcon = devIcon;
 
-    /*$scope.processor = function(rawData, input, output) {
-     var geojsonFeatureCollection = {
-     type: 'FeatureCollection',
-     features: []
-     };
+      L.marker(data.latlng, {
+       icon: theIcon
+      }).addTo(features);
+    //.bindPopup(content).addTo(features);
+      map.fitBounds(features.getBounds());
+    }
 
-     var data = angular.fromJson(rawData);
-     console.log('map.controller: Count is: ' + data.length);
+    function addArea(err, data) {
+      // here you call `bindPopup` with a string of HTML you create - the feature
+      // properties declared above are available under `layer.feature.properties`
+      var content = data.results.query[0] + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
 
-     var stateValues = [];
-     for(var i = 0; i < data.length; i++) {
-     if(stateValues[data[i][input]] === undefined)
-     stateValues[data[i][input]] = 0;
-     stateValues[data[i][input]] += data[i][output];
-     }
-     console.log('map.controller: stateValues=' + stateValues);
-
-     for (var i = data.length - 1; i >= 0; i--) {
-     var curState = data[i][input];
-     var curStateValue = stateValues[data[i][input]];
-     console.log('map.controller: ' + curState + ' -- ' + curStateValue);
-
-     // Augment existing State feature with info. needed for "heatmap"
-     $scope.cropLayerGroup.clearLayers(); // "Resets" the map before displaying new crop data
-     states.find()
-     .layers('2')
-     .text(curState)
-     .run(function(error, featureCollection) {
-     for(var i = 0; i < featureCollection.features.length; i++) {
-     for(var j = 0; j < data.length; j++) {
-     if(featureCollection.features[i].properties.STATE_NAME.toUpperCase() === data[j][input].toUpperCase()) {
-     stateValues = [];
-     for(var k = 0; k < data.length; k++) {
-     if(stateValues[data[k][input]] === undefined)
-     stateValues[data[k][input]] = 0;
-     stateValues[data[k][input]] += data[k][output];
-     }
-     curStateValue = stateValues[data[j][input]];
-
-     // Add the layers to the cropLayerGroup, so they can be controlled as a unit
-     $scope.cropLayerGroup.addLayer(new L.GeoJSON(featureCollection.features[i], {
-     style: style(curStateValue, 0), //maxCropDataValue
-     onEachFeature: $scope.onEachFeature
-     }));
-     }
-     }
-     }
-     });
-     // Add the assembled LayerGroup to the map all at once
-     $scope.cropLayerGroup.addTo(map);
-     }*/
-    //on error
+      L.circleMarker(data.latlng, {
+        icon: L.mapbox.marker.icon({
+          'marker-color': '#f22',
+          'marker-symbol': 'circle-stroked'
+        }),
+        radius: $scope.affectedCountries[data.results.query[0]]*map.getZoom()
+      }).bindPopup(content).addTo(areas);
+      map.fitBounds(areas.getBounds());
+    }
     $scope.errorHappenedMapArea = false;
   }
 );
