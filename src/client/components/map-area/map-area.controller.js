@@ -104,10 +104,17 @@ angular.module('defenderApp')
         for (var i = 0; i < map.layers.length; i++) {
           map.removeLayer(map.layers[i]);
         }
+      /*if (features.layers !== undefined)
+        for (var i = 0; i < features.layers.length; i++) {
+          features.removeLayer(features.layers[i]);
+        }
+      if (areas.layers !== undefined)
+        for (var i = 0; i < areas.layers.length; i++) {
+          areas.removeLayer(areas.layers[i]);
+        }*/
       console.log('map.html: Map cleared!');
 
       // Clear features and markers more elegantly here!
-      markers = [];
       features = new L.FeatureGroup().addTo(map); // Re-initializes
       areas = new L.FeatureGroup().addTo(map);
     }
@@ -144,7 +151,7 @@ angular.module('defenderApp')
           'marker-color': '#f22',
           'marker-symbol': 'circle-stroked'
         }),
-        radius: map.getZoom()/$scope.affectedStates[data.results.query[0]]
+        radius: $scope.affectedStates[data.results.query[0]]
       }).bindPopup(content).addTo(areas);
       map.fitBounds(areas.getBounds());
     }
@@ -160,7 +167,7 @@ angular.module('defenderApp')
           'marker-color': '#f22',
           'marker-symbol': 'circle-stroked'
         }),
-        radius: map.getZoom()/$scope.affectedCountries[data.results.query[0]]
+        radius: $scope.affectedCountries[data.results.query[0]]
       }).bindPopup(content).addTo(areas);
       map.fitBounds(areas.getBounds());
     }
