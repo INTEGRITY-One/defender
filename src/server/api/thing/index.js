@@ -5,6 +5,7 @@ var controller = require('./thing.controller');
 
 var router = express.Router();
 
+router.get('/', controller.index);
 router.get('/food', controller.getFood);
 router.get('/food/:search', controller.getFood);
 router.get('/drug', controller.getDrug);
