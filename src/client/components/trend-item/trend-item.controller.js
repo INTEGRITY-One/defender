@@ -56,6 +56,7 @@ angular.module('defenderApp')
         }
       }
       else {
+        /*
         if ($('#selector-food').hasClass('selected')) {
           qterm = 'food';
           gterm = 'food';
@@ -68,6 +69,7 @@ angular.module('defenderApp')
           qterm = 'device';
           gterm = 'device';
         }
+        */
       }
 
       parseRSS('https://news.google.com/news/feeds?pz=1&cf=all&ned=us&hl=us&q=' + qterm + '+recall&output=rss',null);
