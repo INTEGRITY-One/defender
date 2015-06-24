@@ -4,8 +4,6 @@
 . ~/.profile
 . ~/.bashrc
 
-# cd /home/bitnami/scripts
-
 # get the end timestamp for this interval
 # if nothing is in the log we can still transmit 0s for the current interval,
 NEWLASTUPDATE=`date -Is | awk '{s=$1; sub(/[+]/,".",s); print s "Z"}'`
@@ -13,9 +11,9 @@ NEWLASTUPDATE=`date -Is | awk '{s=$1; sub(/[+]/,".",s); print s "Z"}'`
 
 echo " "
 echo "**** Defender executing custom health check on $NEWLASTUPDATE"
-TIMESTAMPFILE="/home/bitnami/scripts/logwatch.last.timestamp"
+TIMESTAMPFILE="$SCRIPTDIR/logwatch.last.timestamp"
 SERVERLOG="/home/bitnami/server.out"
-INTERVALLOG="/home/bitnami/scripts/logs/log`date '+%Y%m%d%H%M'`.out"
+INTERVALLOG="$SCRIPTDIR/logs/log`date '+%Y%m%d%H%M'`.out"
 
 if test "$1" = "-dryrun"
 then
@@ -24,9 +22,9 @@ else
     SENDMETRIC=1
 fi
 
-if test ! -d /home/bitnami/scripts/logs
+if test ! -d $SCRIPTDIR/logs
 then
-    mkdir /home/bitnami/scripts/logs
+    mkdir $SCRIPTDIR/logs
 fi
 
 if test ! -f $TIMESTAMPFILE
