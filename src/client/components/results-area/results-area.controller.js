@@ -22,7 +22,7 @@ defender.affectedStatesSynonyms['ga'] = ['ga ','ga', 'georgia',',ga,',' ga.',', 
 defender.affectedStatesSynonyms['hi'] = ['hi ','hi', 'hawaii',',hi,',' hi.',', hi.', ', hi,',' hi ','hi\\'];
 defender.affectedStatesSynonyms['id'] = ['id ','id', 'idaho',',id,',' id.',', id.', ', id,',' id ','id\\'];
 defender.affectedStatesSynonyms['il'] = ['il ','il', 'illinois',',il,',' il.',', il.', ', il,',' il ','il\\'];
-defender.affectedStatesSynonyms['in'] = ['in ','in', 'indiana',',in,',' in.',', in.', ', in,',' in ','in\\'];
+defender.affectedStatesSynonyms['in'] = ['in ','in', 'indiana',',in,',' in.',', in.', ', in,','in\\'];
 defender.affectedStatesSynonyms['ia'] = ['ia ','ia', 'iowa',',ia,',' ia.',', ia.', ', ia,',' ia ','ia\\'];
 defender.affectedStatesSynonyms['ks'] = ['ks ','ks', 'kansas',',ks,',' ks.',', ks.', ', ks,',' ks ','ks\\'];
 defender.affectedStatesSynonyms['ky'] = ['ky ','ky', 'kentucky',',ky,',' ky.',', ky.', ', ky,',' ky ','ky\\'];
@@ -67,7 +67,7 @@ defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['e
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['fiji','finland','france']);
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['gabon','gambia','georgia','germany','ghana','greece','grenada','guatemala','guinea-bissau','papua new guinea','guinea','guyana']);
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['haiti','holy see','honduras','hong kong','hungary']);
-defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['iceland','india','indonesia','iran','iraq','ireland','isreal','italy']);
+defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['iceland','india','indonesia','iran','iraq','ireland','israel','italy']);
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['jamaica','japan','jordan']);
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['kazakhstan','kenya','kiribati','north korea','south korea','kosovo','kuwait','kyrgyzstan']);
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['laos','latvia','lebanon','lesotho','liberia','libya','liechtenstein','lithuania','luxembourg']);
@@ -177,44 +177,19 @@ angular.module('defenderApp')
     //on error
     $scope.errorHappenedResultsArea = false;
 
-    //pagination
+    //pagination (deprec)
     $scope.skip = 30;
     $scope.pageSize = 10;
     $scope.totalPages = 20;
     $scope.currentPage = 1;
-
     $scope.recallResultsList = [];
-
     $scope.showInfoIsVisible = false;
 
-    $scope.getApi = function() {
-      $http.get('/api/things')
-        .success(function (recallResultsList) {
-          var response = JSON.parse(recallResultsList);
-          var results = response.results;
-          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
-          $scope.recallResultsList = results;
-          defender.currentResults = results; //for map
-          $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('food recalls in the past 90 days');
-          defender.updateAffectedAreaValues();
-        })
-        .error(function () {
-          $scope.errorHappenedResultsArea = true;
-        });
-    }
-    $scope.nextPage = function() {
-      $scope.currentPage = $scope.currentPage + 1;
-      $scope.skip = $scope.skip + 10;
-      $scope.getApi();
-      console.log($scope.skip)
-    }
-
-    $scope.getApi();
 
     $scope.currSearchTerm = "";
-    $scope.getApiSearchTerm = function() {
-      $http.get('/api/things/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
+
+    $scope.getApiSearchTermFood = function() {
+      $http.get('/api/things/food/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
         .success(function (recallResultsList) {
           var response = JSON.parse(recallResultsList);
           var results = response.results;
@@ -222,31 +197,154 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text($scope.currSearchTerm + ' recalls in the past 90 days');
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food-recalls in the past 90 days');
           defender.updateAffectedAreaValues();
         })
         .error(function () {
           $scope.errorHappenedResultsArea = true;
         });
-    }
+    };
+
+    $scope.getApiSearchTermDrug = function() {
+      $http.get('/api/things/drug/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug-recalls in the past 90 days');
+          defender.updateAffectedAreaValues();
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+
+    $scope.getApiSearchTermDevice = function() {
+      $http.get('/api/things/device/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device-recalls in the past 90 days');
+          defender.updateAffectedAreaValues();
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+
+    $scope.getApiFood = function() {
+      $http.get('/api/things/food')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('food-recalls in the past 90 days');
+          defender.updateAffectedAreaValues();
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+
+    $scope.getApiDrug = function() {
+      $http.get('/api/things/drug')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('drug-recalls in the past 90 days');
+          defender.updateAffectedAreaValues();
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+
+    $scope.getApiDevice = function() {
+      $http.get('/api/things/device')
+        .success(function (recallResultsList) {
+          var response = JSON.parse(recallResultsList);
+          var results = response.results;
+          $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
+          $scope.recallResultsList = results;
+          defender.currentResults = results; //for map
+          $('#big-query-text-value').text(response.meta.results.total);
+          $('#big-query-text-label').text('device-recalls in the past 90 days');
+          defender.updateAffectedAreaValues();
+        })
+        .error(function () {
+          $scope.errorHappenedResultsArea = true;
+        });
+    };
+
+    //on page init, get food data
+    $scope.getApiFood();
+
+    //poll for search implication
     window.setInterval(function() {
       if(defender.searchTerm !== $scope.currSearchTerm) {
-        console.log('searched: ' + defender.searchTerm)
         $scope.currSearchTerm = defender.searchTerm;
+
+        if(defender.searchTerm === '_execFood') {
+          defender.searchTerm = '';
+          $scope.currSearchTerm = '';
+        }
+        if(defender.searchTerm === '_execDrug') {
+          defender.searchTerm = '';
+          $scope.currSearchTerm = '';
+        }
+        if(defender.searchTerm === '_execDevice') {
+          defender.searchTerm = '';
+          $scope.currSearchTerm = '';
+        }
+
+        defender.queryNews();
 
         if($scope.currSearchTerm !== "") {
           $('#big-query-text-value').text("0");
-          $('#big-query-text-label').text($scope.currSearchTerm + ' recalls in the past 90 days');
           $scope.recallResultsList = [];
-          $scope.getApiSearchTerm();
+
+          if($('#selector-food').hasClass('selected')) {
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food-recalls in the past 90 days');
+            $scope.getApiSearchTermFood();
+          }
+          else if($('#selector-drug').hasClass('selected')) {
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug-recalls in the past 90 days');
+            $scope.getApiSearchTermDrug();
+            console.log('called drug')
+          }
+          else if($('#selector-device').hasClass('selected')) {
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device-recalls in the past 90 days');
+            $scope.getApiSearchTermDevice();
+          }
         }
         else {
-          $scope.getApi();
+          if($('#selector-food').hasClass('selected')) {
+            $scope.getApiFood();
+          }
+          else if($('#selector-drug').hasClass('selected')) {
+            $scope.getApiDrug();
+          }
+          else if($('#selector-device').hasClass('selected')) {
+            $scope.getApiDevice();
+          }
         }
       }
     },500);
 
-    $('#info-container').fadeOut();
     $scope.showMoreInfo = function(idx) {
       console.log(idx);
       $('#showMoreModalTitle').text('Recall #' + $scope.recallResultsList[idx]['recall_number']);
@@ -267,6 +365,14 @@ angular.module('defenderApp')
       $('#text_classification').text($scope.recallResultsList[idx]['classification']);
       $('#text_code_info').text($scope.recallResultsList[idx]['code_info']);
       $('#text_initial_firm_notification').text($scope.recallResultsList[idx]['initial_firm_notification']);
+    }
+
+    //deprec
+    $scope.nextPage = function() {
+      $scope.currentPage = $scope.currentPage + 1;
+      $scope.skip = $scope.skip + 10;
+      $scope.getApi();
+      console.log($scope.skip)
     }
   });
 

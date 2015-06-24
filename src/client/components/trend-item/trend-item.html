@@ -1,82 +1,85 @@
 <div ng-controller="TrendItemCtrl">
 
+  <h1 class="col-lg-12 page-header">Trend Data</h1>
+  <hr class="half-rule"/>
+
+  <div class="col-lg-3">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        Topics for Recall
+      </div>
+      <div class="panel-body">
+        <iframe id="TOP_ENTITIES_0_0" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TOP_ENTITIES_0_0&export=5&h=200&w=200"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-3">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        Searches for Recall
+      </div>
+      <div class="panel-body">
+        <iframe id="TOP_QUERIES_0_0" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TOP_QUERIES_0_0&export=5&h=200&w=200"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-3">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        Interest Over Time
+      </div>
+      <div class="panel-body">
+        <iframe id="TIMESERIES_GRAPH_0" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TIMESERIES_GRAPH_0&export=5&h=200&w=400"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-3">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        Top Regions
+      </div>
+      <div class="panel-body">
+        <iframe id="GEO_TABLE_0_0" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_TABLE_0_0&export=5&h=200&w=200"></iframe>
+      </div>
+    </div>
+  </div>
+
   <div class="col-lg-6">
-    <div class="panel panel-primary">
+    <div class="panel panel-success">
       <div class="panel-heading">
-        Title
+        Volume of Recalls
       </div>
       <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_MAP_0_0&export=5&h=200"></iframe>
+        <iframe id="GEO_MAP_0_0" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_MAP_0_0&export=5&h=200"></iframe>
       </div>
     </div>
   </div>
 
   <div class="col-lg-6">
-    <div class="panel panel-primary">
+    <div class="panel panel-info">
       <div class="panel-heading">
-        Title
+        Volume of Recalls
       </div>
       <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_MAP_0_1&export=5&h=200&w=400"></iframe>
+        <iframe id="GEO_MAP_0_1" src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_MAP_0_1&export=5&h=200&w=400"></iframe>
       </div>
     </div>
   </div>
+  
+  <h1 class="col-lg-12 page-header">Top News</h1>
+  <hr class="half-rule"/>
 
-  <div class="col-lg-3">
-    <div class="panel panel-primary">
+  <div class="col-lg-3 prototype-news-item-container" hidden>
+    <div class="panel panel-default">
       <div class="panel-heading">
-        Title
+        Related News
       </div>
-      <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TOP_ENTITIES_0_0&export=5&h=200&w=200"></iframe>
+      <div id="news-item-1" class="panel-body news-item">
       </div>
     </div>
   </div>
-
-  <div class="col-lg-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        Title
-      </div>
-      <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TOP_QUERIES_0_0&export=5&h=200&w=200"></iframe>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        Title
-      </div>
-      <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=TIMESERIES_GRAPH_0&export=5&h=200&w=400"></iframe>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        Title
-      </div>
-      <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?q=food%20recall&cid=GEO_TABLE_0_0&export=5&h=200&w=200"></iframe>
-      </div>
-    </div>
-  </div>
-
-  <!--
-  <div class="col-lg-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        Title
-      </div>
-      <div class="panel-body">
-        <iframe src="http://www.google.com/trends/fetchComponent?hl=en-US&q=food+recall&geo=US&cmpt=geo&tz=Etc/GMT%2B4&tz=Etc/GMT%2B4&content=1&cid=GEO_MAP_0_1&export=5&w=200&h=200"></iframe>
-      </div>
-    </div>
-  </div>
-  -->
 
 </div>
