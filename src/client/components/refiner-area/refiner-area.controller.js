@@ -2,6 +2,7 @@
 
 var defender = defender || {};
 defender.searchTerm = "";
+defender.toggleAreas = false; // Affected areas off by default
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
@@ -120,5 +121,20 @@ angular.module('defenderApp')
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
       console.log(defender.searchTerm);
+    }
+
+    $scope.toggleAffectedAreas = function() {
+      console.log("valueof chk-affected-areas: " + $('#chk-affected-areas').value);
+
+      if (!defender.toggleAreas) {
+        $('#chk-affected-areas').addClass('selected');
+        defender.toggleAreas = true;
+        console.log('Toggled affected areas on');
+      }
+      else {
+        $('#chk-affected-areas').removeClass('selected');
+        defender.toggleAreas = false;
+        console.log('Toggled affected areas off')
+      }
     }
   });
