@@ -9,12 +9,13 @@
 NEWLASTUPDATE=`date -Is | awk '{s=$1; sub(/[+]/,".",s); print s "Z"}'`
 #NEWLASTUPDATE=`cat $INTERVALLOG | awk -F"^" '{lts=$2} END {print lts}'`
 
+SCRIPTDIR="/home/bitnami/scripts"
 echo " "
 echo "**** Defender executing custom health check on $NEWLASTUPDATE"
 TIMESTAMPFILE="$SCRIPTDIR/logwatch.last.timestamp"
 SERVERLOG="/home/bitnami/server.out"
 INTERVALLOG="$SCRIPTDIR/logs/log`date '+%Y%m%d%H%M'`.out"
-EC2_INSTANCE_ID="`wget -q -O - http://169.254.169.254/latest/meta-data/instance-id || die \"wget instance-id has failed: $?\"`"
+EC2_INSTANCE_ID="`wget -q -O - http://169.254.169.254/latest/meta-data/instance-id || hostname `"
 
 if test "$1" = "-dryrun"
 then
