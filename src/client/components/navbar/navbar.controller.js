@@ -6,6 +6,10 @@ angular.module('defenderApp')
       'title': 'Home',
       'link': '/'
     }];
+    $scope.menuRight = [{
+      'title': 'About',
+      'link': '#about'
+    }];
 
     $scope.isCollapsed = true;
 
