@@ -26,18 +26,13 @@ angular.module('defenderApp')
     });
     // Custom icon for Food recalls
     var devIcon = L.icon({
-      iconUrl: 'assets/images/device_green.png',
+      iconUrl: 'assets/images/device_yellow.png',
       iconSize: [30, 30]
     });
 
     // Create a map in the div #map
     $scope.initMap = function () {
       console.log('map.html: Attempting to load the map...');
-      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
-      /*map.on("layeradd", function() {
-        if (features !== undefined)
-          map.fitBounds(features.getBounds());
-      });*/
 
       // Looks for data updates from component scope
       window.setInterval(function () {
@@ -49,6 +44,7 @@ angular.module('defenderApp')
             $scope.affectedCountries = defender.affectedForeignCountries;
 
             // Update the map with new data
+            $scope.resetMap();
             $scope.updateAffectedAreas($scope.affectedStates, $scope.affectedCountries);
             $scope.updateFeatures($scope.currResults);
             console.log('map.html: Successfully updated map!');
@@ -57,15 +53,30 @@ angular.module('defenderApp')
       }, 1000); // ...every second
     };
 
-    $scope.updateFeatures = function (results) {
-      clearMap();
+    $scope.resetMap = function() {
+      console.log('map.controller: trying to kill the map!');
 
+      // Handle case where map does not yet have Layers
+      //if (map.layers !== undefined)
+      if (map !== undefined)
+        map.remove();
+
+      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
+      features = new L.FeatureGroup().addTo(map); // Re-initializes
+      areas = new L.FeatureGroup().addTo(map);
+      /*map.on("layeradd", function() {
+       if (features !== undefined)
+       map.fitBounds(features.getBounds());
+       });*/
+    };
+
+    $scope.updateFeatures = function (results) {
       // Geocode the City, ST of the results to build up the FeatureLayer
       var cities = [];
       for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
         // De-duplication
         if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
-          console.log("trying to geocode this" + $scope.currResults[i].city + ", " + $scope.currResults[i].state);
+          //console.log("trying to geocode this" + $scope.currResults[i].city + ", " + $scope.currResults[i].state);
           geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addCity);
           cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
         }
@@ -99,24 +110,33 @@ angular.module('defenderApp')
     }
     // Clear the map
     function clearMap() {
+      console.log('trying to kill the map!');
       // Handle case where map does not yet have Layers
-      if (map.layers !== undefined)
+      //if (map.layers !== undefined)
+        map.remove();
+        /*{
+
+        console.log('this many map layers: ' + map.getLayers().length);
         for (var i = 0; i < map.layers.length; i++) {
           map.removeLayer(map.layers[i]);
         }
-      /*if (features.layers !== undefined)
+      }
+      if (features.layers !== undefined) {
+        console.log('this many feature layers: ' + features.getLayers().length);
         for (var i = 0; i < features.layers.length; i++) {
           features.removeLayer(features.layers[i]);
         }
-      if (areas.layers !== undefined)
+      }
+      if (areas.layers !== undefined) {
+        console.log('this many areas layers: ' + areas.getLayers().length);
         for (var i = 0; i < areas.layers.length; i++) {
           areas.removeLayer(areas.layers[i]);
-        }*/
+        }
+      }*/
       console.log('map.html: Map cleared!');
 
       // Clear features and markers more elegantly here!
-      features = new L.FeatureGroup().addTo(map); // Re-initializes
-      areas = new L.FeatureGroup().addTo(map);
+
     }
 
 
