@@ -176,17 +176,15 @@ angular.module('defenderApp')
 
     //on error
     $scope.errorHappenedResultsArea = false;
+    $scope.currSearchTerm = "";
 
     //pagination (deprec)
     $scope.skip = 30;
     $scope.pageSize = 10;
-    $scope.totalPages = 20;
+    $scope.totalPages = 0;
     $scope.currentPage = 1;
     $scope.recallResultsList = [];
     $scope.showInfoIsVisible = false;
-
-
-    $scope.currSearchTerm = "";
 
     $scope.getApiSearchTermFood = function() {
       $http.get('/api/things/food/reason_for_recall:"' + $scope.currSearchTerm + '"+product_description:"' + $scope.currSearchTerm + '"+recalling_firm:"' + $scope.currSearchTerm + '"')
@@ -198,6 +196,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -215,6 +214,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -232,6 +232,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -249,6 +250,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('food-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -266,6 +268,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('drug-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -283,6 +286,7 @@ angular.module('defenderApp')
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
           $('#big-query-text-label').text('device-recalls in the past 90 days');
+          $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
         .error(function () {
@@ -292,6 +296,23 @@ angular.module('defenderApp')
 
     //on page init, get food data
     $scope.getApiFood();
+
+    $scope.formatDates = function() {
+      for(var i = 0; i < defender.currentResults.length; i++) {
+        defender.currentResults[i]['report_date'] = $scope.formatDate(defender.currentResults[i]['report_date'])
+        defender.currentResults[i]['recall_initiation_date'] = $scope.formatDate(defender.currentResults[i]['recall_initiation_date'])
+      }
+    }
+
+    $scope.formatDate = function(unformattedDate) {
+      if(unformattedDate.length !== 8) {
+        return unformattedDate;
+      }
+      var yyyy = unformattedDate.substr(0,4);
+      var mm = unformattedDate.substr(4,2);
+      var dd = unformattedDate.substr(6,2);
+      return mm + '/' + dd + '/' + yyyy;
+    }
 
     //poll for search implication
     window.setInterval(function() {
@@ -346,7 +367,10 @@ angular.module('defenderApp')
     },500);
 
     $scope.showMoreInfo = function(idx) {
-      console.log(idx);
+      if(idx >= $scope.recallResultsList.length) {
+        return false;
+      }
+
       $('#showMoreModalTitle').text('Recall #' + $scope.recallResultsList[idx]['recall_number']);
       $('#text_reason_for_recall').text($scope.recallResultsList[idx]['reason_for_recall']);
       $('#text_status').text($scope.recallResultsList[idx]['status']);
@@ -365,6 +389,8 @@ angular.module('defenderApp')
       $('#text_classification').text($scope.recallResultsList[idx]['classification']);
       $('#text_code_info').text($scope.recallResultsList[idx]['code_info']);
       $('#text_initial_firm_notification').text($scope.recallResultsList[idx]['initial_firm_notification']);
+
+      return true;
     }
 
     //deprec
