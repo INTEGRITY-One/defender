@@ -11,6 +11,7 @@ angular.module('defenderApp')
     }];
 
     $('.navbar-brand').click(function() {
+      //resets to initial state
       $('#selector-food').removeClass('btn-default');
       $('#selector-food').addClass('btn-danger');
       $('#selector-food').addClass('selected');
