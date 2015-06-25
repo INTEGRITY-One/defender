@@ -151,30 +151,50 @@ angular.module('defenderApp')
     // Callback function for adding affected US States
     function addState(err, data) {
       // Build text to appear in popup dialog
-      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
-
-      L.circleMarker(data.latlng, {
-        icon: L.mapbox.marker.icon({
-          'marker-color': '#f22',
-          'marker-symbol': 'circle-stroked'
-        }),
-        radius: $scope.affectedStates[data.results.query[0]] // TODO: Needs to be improved...
-      }).bindPopup(content).addTo(areas);
+      var content = data.results.features[0].place_name + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
+      // Choose which color to use
+      var theColor = '#E74C3C'; // default
+      if($('#selector-food').hasClass('selected'))
+        theColor = '#E74C3C';
+      if($('#selector-drug').hasClass('selected'))
+        theColor = '#3498db';
+      if($('#selector-device').hasClass('selected'))
+        theColor = '#f39c12';
+      // Render as variable-size "bubble" (circle)
+      var geojsonMarkerOptions = {
+        radius: $scope.affectedStates[data.results.query[0]]>35?35:$scope.affectedStates[data.results.query[0]], // TODO: Needs to be improved...
+        fillColor: theColor,
+        color: theColor,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.3
+      };
+      L.circleMarker(data.latlng, geojsonMarkerOptions).bindPopup(content).addTo(areas);
     }
 
     // Callback function for adding affected Foreign Countries
     function addCountry(err, data) {
       // Build text to appear in popup dialog
-      var content = data.results.query[0] + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
-
+      var content = data.results.features[0].place_name + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
+      // Choose which color to use
+      var theColor = '#E74C3C'; // default
+      if($('#selector-food').hasClass('selected'))
+        theColor = '#E74C3C';
+      if($('#selector-drug').hasClass('selected'))
+        theColor = '#3498db';
+      if($('#selector-device').hasClass('selected'))
+        theColor = '#f39c12';
       // Render as variable-size "bubble" (circle)
-      L.circleMarker(data.latlng, {
-        icon: L.mapbox.marker.icon({
-          'marker-color': '#f22',
-          'marker-symbol': 'circle-stroked'
-        }),
-        radius: $scope.affectedCountries[data.results.query[0]] // TODO: Needs to be improved...
-      }).bindPopup(content).addTo(areas);
+      var geojsonMarkerOptions = {
+        radius: $scope.affectedCountries[data.results.query[0]]>35?35:$scope.affectedCountries[data.results.query[0]], // TODO: Needs to be improved...
+        fillColor: theColor,
+        color: theColor,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.3
+      };
+      // Render as variable-size "bubble" (circle)
+      L.circleMarker(data.latlng, geojsonMarkerOptions).bindPopup(content).addTo(areas);
     }
     $scope.errorHappenedMapArea = false;
   }
