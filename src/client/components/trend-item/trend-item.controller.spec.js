@@ -15,7 +15,13 @@ describe('Controller: TrendItemCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
+  describe('when building top news', function(){
+    it('should have an updateRssUI function', function() {
+      expect(scope.updateRssUI).not.toEqual(null);
+    })
+
+    it('should return false from updateRssUI if the DOM element is undefined', function() {
+      expect(scope.updateRssUI('#undefined-element', 999, "link", "title", "contentSnippet", "url")).toBeFalsy();
+    })
   });
 });
