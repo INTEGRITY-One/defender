@@ -31,7 +31,7 @@ Our subsequent sprints (2-5) were re-prioritized by the Product Owner prior to t
 * [Sprint Review:] (https://github.com/INTEGRITY-One/defender/blob/master/AgileArtifacts/Sprint Reviews and Retros.docx) Demonstrated the capabilities to the Product Owner and stakeholders to gain feedback and updated backlog 
 * [Sprint Retrospective:] (https://github.com/INTEGRITY-One/defender/blob/master/AgileArtifacts/Sprint Reviews and Retros.docx) Identified efficiencies and corrective actions to implement 
 
-Along the way we used github for configuration management, and created a [design document] (https://github.com/INTEGRITY-One/defender/blob/master/requirements-design/Defender Design Doc.docx) and a bare metal installation document.  
+Along the way we used github for configuration management, and created a [design document] (https://github.com/INTEGRITY-One/defender/blob/master/requirements-design/Defender Design Doc.docx) and a bare metal [installation document] (https://github.com/INTEGRITY-One/defender/blob/master/INSTALL.md).  
 
 ## Team Composition
 The team was comprised of personnel with distinct and defined roles across multiple disciplines: 
