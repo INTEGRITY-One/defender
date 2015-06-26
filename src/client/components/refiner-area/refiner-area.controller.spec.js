@@ -15,7 +15,14 @@ describe('Controller: RefinerAreaCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
-  });
+  describe('on randomized refinement', function() {
+    it('should have a getRandomResult function', function() {
+      expect(scope.getRandomResult).not.toEqual(null);
+    });
+
+    it('should return false if the randomizer list is empty', function() {
+      var randomList = [];
+      expect(scope.getRandomResult(randomList)).toBeFalsy();
+    });
+  })
 });

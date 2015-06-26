@@ -2,6 +2,7 @@
 
 var defender = defender || {};
 defender.searchTerm = "";
+defender.toggleAreas = false; // Affected areas off by default
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
@@ -9,8 +10,6 @@ $(function () {
 
 angular.module('defenderApp')
   .controller('RefinerAreaCtrl', function ($scope) {
-    //this file will hook in functionality to the refiner area such as FOOD.click, SearchBoxGo.Click
-
     $scope.refineResults = function() {
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
@@ -105,20 +104,39 @@ angular.module('defenderApp')
       var newTerm = $('#input-refiner').val();
       while(newTerm === $('#input-refiner').val()) {
         if($('#selector-food').hasClass('selected')) {
-          var r = Math.floor((Math.random() * randomFoodResultList.length));
-          $('#input-refiner').val(randomFoodResultList[r]);
+          $scope.getRandomResult(randomFoodResultList);
         }
         else if($('#selector-drug').hasClass('selected')) {
-          var r = Math.floor((Math.random() * randomDrugResultList.length));
-          $('#input-refiner').val(randomDrugResultList[r]);
+          $scope.getRandomResult(randomDrugResultList);
         }
         else if($('#selector-device').hasClass('selected')) {
-          var r = Math.floor((Math.random() * randomDeviceResultList.length));
-          $('#input-refiner').val(randomDeviceResultList[r]);
+          $scope.getRandomResult(randomDeviceResultList);
         }
       }
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
-      console.log(defender.searchTerm);
+      return true;
+    }
+
+    $scope.getRandomResult = function(randomList) {
+      if(randomList.length === 0) {
+        return false;
+      }
+      var r = Math.floor((Math.random() * randomList.length));
+      $('#input-refiner').val(randomList[r]);
+      return true;
+    }
+
+    $scope.toggleAffectedAreas = function() {
+      if (!defender.toggleAreas) {
+        $('#chk-affected-areas').addClass('selected');
+        defender.toggleAreas = true;
+        console.log('Toggled affected areas on');
+      }
+      else {
+        $('#chk-affected-areas').removeClass('selected');
+        defender.toggleAreas = false;
+        console.log('Toggled affected areas off')
+      }
     }
   });
