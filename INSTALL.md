@@ -1,6 +1,7 @@
-Installing Defender
+#Installing Defender
 
 #Pre-Requisites
+Note that for some Linux environments, you may need to install with sudo and place the -g flag at the end of the command.
 - [Install Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) and the npm package manager. There is a [Github Gist](https://gist.github.com/isaacs/579814) if you encounter issues installing Node.js
 - [Install and Start MongoDB](http://docs.mongodb.org/manual/installation/) and ensure it is running on port 27017.
 - [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) so that you can get our app.
