@@ -8,7 +8,7 @@ The Defender prototype was developed to inform the general public about drug, de
 ## Approach
 Our approach leveraged our extensive experience using Scrum to define, design, develop, and implement sites and applications. We decided to time-box one as-yet-to-be-defined release into 7 sprints including a Sprint 0 and a Release Sprint (we know, hear us out).
 
-| Static  | Process  | 
+| Statistic  | Process  | 
 | :------------ |:---------------: |
 | Release Type         | Time-boxed               |
 | # of Sprints	         | 6                                   |
