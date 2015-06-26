@@ -34,7 +34,7 @@ Our subsequent sprints (2-5) were re-prioritized by the Product Owner prior to t
 Along the way we used github for configuration management, and created a [design document] (https://github.com/INTEGRITY-One/defender/blob/master/requirements-design/Defender Design Doc.docx) and a bare metal [installation document] (https://github.com/INTEGRITY-One/defender/blob/master/INSTALL.md).  
 
 ## Team Composition
-The team was comprised of personnel with distinct and defined roles across multiple disciplines: 
+[The team] (https://github.com/INTEGRITY-One/defender/blob/master/AgileArtifacts/about_us.png) was comprised of personnel with distinct and defined roles across multiple disciplines: 
 * Product Owner –In addition to the standard responsibilities of a PO, to facilitate rapid feedback for our short sprints, we integrated the PO into testing and validation with mentoring by the Scrum Master to ensure changes weren’t being made on the fly. 
 * Delivery Manager/Agile Coach – Our ScrumMaster coordinated decomposition and sizing of backlog with team and PO, and coached the PO in agile requirements definition
 * Frontend Developer – Designed, developed and unit tested user-facing capabilities using open source technologies such as Express, AngularJS, node.JS, Bootstrap, Grunt and Karma
