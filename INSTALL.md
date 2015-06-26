@@ -9,7 +9,7 @@ Note that for some Linux environments, you may need to install with sudo and pla
 ```
 $ npm install -g bower
 ```
-- Install [Grunt Task Runner](http://bower.io/) with the following command:
+- Install [Grunt Task Runner](http://gruntjs.com/) with the following command:
 ```
 $ npm install -g grunt-cli
 ```
@@ -23,7 +23,7 @@ $ npm install -g grunt-cli
 ```
 $ git clone https://github.com/INTEGRITY-One/defender.git defender
 ```
-This will close the Defender repo and store it in a defender folder.
+This will clone the Defender repo and store it in a defender folder.
 
 #Install Defender App
 After completing all pre-requisites, you're ready to install the application. This process will download all dependencies and build the application.
@@ -36,11 +36,11 @@ $ npm install
 #Start Defender Application
 cd to the defender\src directory and use the following command:
 ```
-grunt serve
+$ grunt serve
 ```
 
 #Testing The Defender Application
 cd to the defender/src directory and use the following command:
 ```
-grunt test
+$ grunt test
 ```
