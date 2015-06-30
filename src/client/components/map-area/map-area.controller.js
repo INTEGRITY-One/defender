@@ -84,17 +84,19 @@ angular.module('defenderApp')
         map.remove();
 
       map = L.mapbox.map('map');
-      map.on("overlayremoved", function(e) {
+      map.on("overlayremove", function(e) {
         if (e.name === "Affected Areas") {
-          console.log("map.controller: Removing Affected Areas...");
+          //console.log("map.controller: Removing Affected Areas...");
           $scope.toggleAreas = false;
           defender.toggleAreas = false;
+          map.fitBounds(features.getBounds()); // Auto-zoom to Features only
         }
-      }).on("overlayadded", function(e) {
+      }).on("overlayadd", function(e) {
         if (e.name === "Affected Areas") {
-          console.log("map.controller: Adding Affected Areas...");
+          //console.log("map.controller: Adding Affected Areas...");
           $scope.toggleAreas = true;
           defender.toggleAreas = true;
+          map.fitBounds(areas.getBounds());  // Auto-zoom to Affected Areas
         }
       });
 
@@ -178,21 +180,20 @@ angular.module('defenderApp')
       features = new L.FeatureGroup();
       for (var i = 0; i < cityGeoData.length; i++)
         buildCityMarker(cityGeoData[i]);
-      console.log("map.controller: Finished building " + cityGeoData.length + " City markers");
+      //console.log("map.controller: Finished building " + cityGeoData.length + " City markers");
 
       areas = new L.FeatureGroup();
       for (var i = 0; i < stateGeoData.length; i++)
         buildStateBubble(stateGeoData[i]);
       for (var i = 0; i < countryGeoData.length; i++)
         buildCountryBubble(countryGeoData[i]);
-      console.log("map.controller: Finished building " + (stateGeoData.length + countryGeoData.length) + " Affected Area bubbles");
+      //console.log("map.controller: Finished building " + (stateGeoData.length + countryGeoData.length) + " Affected Area bubbles");
 
       // Finally, add Layer control to Map and autozoom
       L.control.layers({
-        'Mapbox Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
-        'Mapbox Light': L.mapbox.tileLayer('mapbox.light'),
-        'Mapbox Comic': L.mapbox.tileLayer('mapbox.comic'),
-        'Mapbox Pencil': L.mapbox.tileLayer('mapbox.pencil')
+        'Mapbox Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map), //'Mapbox Light': L.mapbox.tileLayer('mapbox.light'),
+        'Mapbox Dark': L.mapbox.tileLayer('mapbox.dark'),
+        'Mapbox Comic': L.mapbox.tileLayer('mapbox.comic') //'Mapbox Pencil': L.mapbox.tileLayer('mapbox.pencil')
       }, {
         'Recall Sites': features.addTo(map),
         'Affected Areas': areas
@@ -230,7 +231,7 @@ angular.module('defenderApp')
             break;
         }
       }
-      var content = label + " was the source of " + cityCounts[cityKey] + " recalls";
+      var content = label + " was the source of " + cityCounts[cityKey] + " recall" + (cityCounts[cityKey]>1?"s":"");
 
       // Choose which icon to use
       var theIcon = foodIcon; // default
@@ -252,7 +253,8 @@ angular.module('defenderApp')
     function buildStateBubble(data) {
       // Build text to appear in popup dialog
       var content = data.results.features[0].place_name + " was affected by " +
-        $scope.affectedStates[data.results.query[0]] + " recalls";
+        $scope.affectedStates[data.results.query[0]] + " recall" +
+        ($scope.affectedStates[data.results.query[0]]>1?"s":"");
 
       // Choose which color to use
       var theColor = '#E74C3C'; // default
@@ -265,7 +267,7 @@ angular.module('defenderApp')
       // Render as variable-size "bubble" (circle)
       var geojsonMarkerOptions = {
         radius: $scope.affectedStates[data.results.query[0]]>35?
-          35:$scope.affectedStates[data.results.query[0]], // TODO: Needs to be improved...
+          35:$scope.affectedStates[data.results.query[0]], // TODO: Scaling needs to be improved...
         fillColor: theColor,
         color: theColor,
         weight: 2,
@@ -282,7 +284,8 @@ angular.module('defenderApp')
     function buildCountryBubble(data) {
       // Build text to appear in popup dialog
       var content = data.results.features[0].place_name + " was affected by " +
-        $scope.affectedCountries[data.results.query.join().replace(/,/g," ")] + " recalls";
+        $scope.affectedCountries[data.results.query.join().replace(/,/g," ")] + " recall" +
+        ($scope.affectedCountries[data.results.query.join().replace(/,/g," ")]>1?"s":"");
 
       // Choose which color to use
       var theColor = '#E74C3C'; // default
@@ -295,7 +298,7 @@ angular.module('defenderApp')
       // Render as variable-size "bubble" (circle)
       var geojsonMarkerOptions = {
         radius: $scope.affectedCountries[data.results.query[0]]>35?
-          35:$scope.affectedCountries[data.results.query[0]], // TODO: Needs to be improved...
+          35:$scope.affectedCountries[data.results.query[0]], // TODO: Scaling needs to be improved...
         fillColor: theColor,
         color: theColor,
         weight: 2,
