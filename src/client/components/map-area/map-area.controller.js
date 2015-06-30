@@ -6,10 +6,19 @@ angular.module('defenderApp')
     // Initialize some variables
     var map;
     $scope.currResults = []; // Resultset from module
-    var features;// = new L.FeatureGroup();
+    var features;
     var areas;
+    var cities = [];
+    var cityCounts = [];
+    var cityGeoData = [];
+    var states = [];
+    var stateCounts = [];
+    var stateGeoData = [];
+    var countries = [];
+    var countryCounts = [];
+    var countryGeoData = [];
+    var ready = false;
 
-    var markers = [];
     // Provide your access token
     L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
     var geocoder = L.mapbox.geocoder('mapbox.places');
@@ -32,13 +41,19 @@ angular.module('defenderApp')
 
     // Create a map in the div #map
     $scope.initMap = function () {
-      console.log('map.html: Attempting to load the map...');
+      console.log('map.controller: Attempting to Initialize the map...');
+      // One-time call to set the module-level function
+      if (defender.resetMap === undefined) {
+        defender.resetMap = $scope.resetMap;
+        console.log("map.controller: Attached map reset method to global context!");
+      }
 
-      // Looks for data updates from component scope
+      // This window interval acts as a handler for asynchronous processing
       window.setInterval(function () {
         if (defender.currentResults !== undefined) {
+          // Looks for data updates from component scope
           if (defender.currentResults !== $scope.currResults || defender.toggleAreas != $scope.toggleAreas) {
-            console.log('map.controller: state changed - updating map!');
+            console.log('map.controller: State of results or Affected Areas toggle changed - updating map!');
             $scope.currResults = defender.currentResults;
             $scope.affectedStates = defender.affectedStates;
             $scope.affectedCountries = defender.affectedForeignCountries;
@@ -47,92 +62,175 @@ angular.module('defenderApp')
             // Update the map with new data
             $scope.resetMap();
           }
-          // Conditionally update Affected Areas, based on selection
-          else if (defender.toggleAreas != $scope.toggleAreas) {
-            $scope.toggleAreas = defender.toggleAreas;
-            $scope.resetMap();
+
+          // Ensure we don't attempt to render the map until ALL geocoding is complete
+          if (ready && cities.length > 0 && cityGeoData.length === cities.length &&
+              states.length > 0 && stateGeoData.length === states.length &&
+              countries.length > 0 && countryGeoData.length === countries.length) {
+            console.log("map.controller: Detected completion of geocoding - rendering features and areas!");
+            ready = false; // reset the "ready" flag
+            renderFeatureGroups();
           }
         }
       }, 1000); // ...every second
     };
 
+    // Main function for (re)-building the Map
     $scope.resetMap = function() {
       console.log('map.controller: Resetting map...');
 
-      // Handle case where map does not yet have Layers
-      //if (map.layers !== undefined)
+      // If Map exists, Kill it!
       if (map !== undefined)
         map.remove();
 
-      map = L.mapbox.map('map', 'mapbox.light').setView([37.78, -92.85], 1); // World Map
-      features = new L.FeatureGroup().addTo(map); // Re-initializes
-      areas = new L.FeatureGroup().addTo(map);
-      features.on("layeradd", function() {
-        // TODO: Performance Issue - should defer auto-zoom until all features are present
-        if (areas.getBounds() > features.getBounds())
-          map.fitBounds(areas.getBounds());
-        else
-          map.fitBounds(features.getBounds());
-      });
-      areas.on("layeradd", function() {
-          // TODO: Performance Issue - should defer auto-zoom until all features are present
-          if (areas.getBounds() > features.getBounds())
-            map.fitBounds(areas.getBounds());
-          else
-            map.fitBounds(features.getBounds());
+      map = L.mapbox.map('map');
+      map.on("overlayremoved", function(e) {
+        if (e.name === "Affected Areas") {
+          console.log("map.controller: Removing Affected Areas...");
+          $scope.toggleAreas = false;
+          defender.toggleAreas = false;
+        }
+      }).on("overlayadded", function(e) {
+        if (e.name === "Affected Areas") {
+          console.log("map.controller: Adding Affected Areas...");
+          $scope.toggleAreas = true;
+          defender.toggleAreas = true;
+        }
       });
 
-      // Conditionally update Affected Areas, based on selection
-      if ($scope.toggleAreas)
-        $scope.updateAffectedAreas($scope.affectedStates,$scope.affectedCountries);
-
+      // State of affected areas is controlled by Layer Control now
       $scope.updateFeatures($scope.currResults);
-      console.log('map.controller: Successfully rebuilt map!');
+      $scope.updateAffectedAreas($scope.affectedStates,$scope.affectedCountries);
     };
 
-    // Render recall sites (Cities)
+    // Identify and Geocode recall sites (Cities)
     $scope.updateFeatures = function (results) {
       // Geocode the City, ST of the results to build up the FeatureLayer
-      var cities = [];
-      for (var i = ($scope.currResults).length - 1; i >= 0; i--) { // Suppress duplicate markers
-        if (cities.indexOf($scope.currResults[i].city + ", " + $scope.currResults[i].state) === -1) {
-          geocoder.query($scope.currResults[i].city + ", " + $scope.currResults[i].state, addCity);
-          cities.push($scope.currResults[i].city + ", " + $scope.currResults[i].state);
+      cities = []; // Initialize the arrays
+      cityCounts = [];
+      cityGeoData = [];
+      // Just count the cities first
+      for (var i = ($scope.currResults).length - 1; i >= 0; i--) {
+        var cityKey = $scope.currResults[i].city.toLowerCase().replace(/ /g, "") +
+          ($scope.currResults[i].state!==null?$scope.currResults[i].state.toLowerCase().replace(/ /g, ""):"") +
+          $scope.currResults[i].country.toLowerCase().replace(/ /g, "");
+
+        // Suppress duplicate markers
+        if (cities.indexOf(cityKey) === -1) {
+          cities.push(cityKey);
+          cityCounts[cityKey] = 1; // First record for this city
         }
+        else
+          cityCounts[cityKey] = cityCounts[cityKey] + 1;
       }
-    };
+      ready = true;
+
+      // Kick off geocoder calls to geocode each City
+      for (var i = 0; i < cities.length; i++)
+        geocoder.query($scope.currResults[i].city + ", " +
+          ($scope.currResults[i].state!==null?$scope.currResults[i].state + ", ":"")  +
+          $scope.currResults[i].country, function(err, data) {cityGeoData.push(data);});
+      // Even though geocoder may still be processing results, we alreaady know total...
+    }
 
     // Render affected areas (States, Countries)
-    $scope.updateAffectedAreas = function (states, countries) {
-      console.log('map.html: Affected states - ' + states);
-      console.log('map.html: Affected countries = ' + countries);
+    $scope.updateAffectedAreas = function (stateList, countryList) {
+      states = []; // Initialize arrays
+      stateCounts = [];
+      stateGeoData = [];
+      countries = [];
+      countryCounts = [];
+      countryGeoData = [];
 
-      // Update the states
-      for (var i = states.length - 1; i >= 0; i--) {
-        var curState = states[i];
-        var curStateValue = states[curState];
-        console.log('map.controller: ' + curState + ' -- ' + curStateValue);
-
-        // Geocode the ST, only if 1 or more are affected
-        if (curStateValue > 0)
-          geocoder.query(curState + ", United States", addState);
+      // Just count the states w/ count > 0 first
+      for (var i = stateList.length - 1; i >= 0; i--) {
+        var curState = stateList[i];
+        var curStateValue = stateList[curState];
+        if (curStateValue > 0) {
+          states.push(curState);
+          stateCounts[curState] = curStateValue;
+        }
       }
-      // Update the countries
-      for (var i = countries.length - 1; i >= 0; i--) {
-        var curCountry = countries[i];
-        var curCountryValue = countries[curCountry];
-        console.log('map.controller: ' + curCountry + ' -- ' + curCountryValue);
-
-        // Geocode the Country, only if 1 or more are affected
-        if (curCountryValue > 0)
-          geocoder.query(curCountry, addCountry);
+      // Just count the countries w/ count > 0 first
+      for (var i = countryList.length - 1; i >= 0; i--) {
+        var curCountry = countryList[i];
+        var curCountryValue = countryList[curCountry];
+        if (curCountryValue > 0) {
+          countries.push(curCountry);
+          countryCounts[curCountry] = curCountryValue;
+        }
       }
-    };
+      ready = true;
 
-    // Function for building up the "features" FeatureGroup
-    function addCity(err, data) {
+      // Kick off geocoder calls to geocode each state w/ count > 0
+      for (var i = 0; i < states.length; i++)
+        geocoder.query(states[i] + ", United States", function(err, data) {stateGeoData.push(data);});
+      // Kick off geocoder calls to geocode each country w/ count > 0
+      for (var i = 0; i < countries.length; i++)
+        geocoder.query(countries[i], function(err, data) {countryGeoData.push(data);});
+
+      // Even though geocoder may still be processing results, we already know totals...
+    }
+
+    // ...which allows us to wait until all geocoding is complete before continuing
+    function renderFeatureGroups() {
+      // NOW, it should be safe to proceed
+      features = new L.FeatureGroup();
+      for (var i = 0; i < cityGeoData.length; i++)
+        buildCityMarker(cityGeoData[i]);
+      console.log("map.controller: Finished building " + cityGeoData.length + " City markers");
+
+      areas = new L.FeatureGroup();
+      for (var i = 0; i < stateGeoData.length; i++)
+        buildStateBubble(stateGeoData[i]);
+      for (var i = 0; i < countryGeoData.length; i++)
+        buildCountryBubble(countryGeoData[i]);
+      console.log("map.controller: Finished building " + (stateGeoData.length + countryGeoData.length) + " Affected Area bubbles");
+
+      // Finally, add Layer control to Map and autozoom
+      L.control.layers({
+        'Mapbox Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
+        'Mapbox Light': L.mapbox.tileLayer('mapbox.light'),
+        'Mapbox Comic': L.mapbox.tileLayer('mapbox.comic'),
+        'Mapbox Pencil': L.mapbox.tileLayer('mapbox.pencil')
+      }, {
+        'Recall Sites': features.addTo(map),
+        'Affected Areas': areas
+      }, {
+        'collapsed': false
+      }).addTo(map);
+      // If Affected Areas toggle is set, preserve the selection
+      if ($scope.toggleAreas) {
+        areas.addTo(map);
+        map.fitBounds(areas.getBounds()); // If Affected Areas is active, zoom to these bounds...
+      }
+      else
+        map.fitBounds(features.getBounds()); //..., otherwise just use the Feature locations
+    }
+
+    // Function for creating the city Markers
+    function buildCityMarker(data) {
       // Build text to appear in popup dialog
-      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
+      var cityKey = data.results.query.join().replace(/,/g,"");
+      var label = "";
+      for (var i = 0; i < data.results.query.length; i++) {
+        switch(i) {
+          case data.results.query.length-2:
+            // Handle case where there's only 2 parts total, e.g. international City and Country
+            if (data.results.query.length <= 2)
+              label = data.results.query[i].substring(0,1).toUpperCase() + data.results.query[i].slice(1);
+            else if (data.results.query[i].length == 2)  // likely a State
+              label = label + ", " + data.results.query[i].toUpperCase();
+            break;
+          case data.results.query.length-1:
+            label = label + ", " + data.results.query[i].toUpperCase();
+            break;
+          default:
+            label = label + " " + data.results.query[i].substring(0,1).toUpperCase() + data.results.query[i].slice(1);
+            break;
+        }
+      }
+      var content = label + " was the source of " + cityCounts[cityKey] + " recalls";
 
       // Choose which icon to use
       var theIcon = foodIcon; // default
@@ -143,38 +241,71 @@ angular.module('defenderApp')
       if($('#selector-device').hasClass('selected'))
         theIcon = devIcon;
 
+      // Create the Marker and add to FeatureGroup
       L.marker(data.latlng, {
-       icon: theIcon
-      }).addTo(features);//.bindPopup(content);
+        icon: theIcon
+      }).bindPopup(content)
+        .addTo(features);
     }
 
     // Callback function for adding affected US States
-    function addState(err, data) {
+    function buildStateBubble(data) {
       // Build text to appear in popup dialog
-      var content = data.results.query[0] + " was affected by " + $scope.affectedStates[data.results.query[0]] + " recalls";
+      var content = data.results.features[0].place_name + " was affected by " +
+        $scope.affectedStates[data.results.query[0]] + " recalls";
 
-      L.circleMarker(data.latlng, {
-        icon: L.mapbox.marker.icon({
-          'marker-color': '#f22',
-          'marker-symbol': 'circle-stroked'
-        }),
-        radius: $scope.affectedStates[data.results.query[0]] // TODO: Needs to be improved...
-      }).bindPopup(content).addTo(areas);
+      // Choose which color to use
+      var theColor = '#E74C3C'; // default
+      if($('#selector-food').hasClass('selected'))
+        theColor = '#E74C3C';
+      if($('#selector-drug').hasClass('selected'))
+        theColor = '#3498db';
+      if($('#selector-device').hasClass('selected'))
+        theColor = '#f39c12';
+      // Render as variable-size "bubble" (circle)
+      var geojsonMarkerOptions = {
+        radius: $scope.affectedStates[data.results.query[0]]>35?
+          35:$scope.affectedStates[data.results.query[0]], // TODO: Needs to be improved...
+        fillColor: theColor,
+        color: theColor,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.3
+      };
+      L.circleMarker(data.latlng,
+        geojsonMarkerOptions
+      ).bindPopup(content)
+        .addTo(areas);
     }
 
     // Callback function for adding affected Foreign Countries
-    function addCountry(err, data) {
+    function buildCountryBubble(data) {
       // Build text to appear in popup dialog
-      var content = data.results.query[0] + " was affected by " + $scope.affectedCountries[data.results.query[0]] + " recalls";
+      var content = data.results.features[0].place_name + " was affected by " +
+        $scope.affectedCountries[data.results.query.join().replace(/,/g," ")] + " recalls";
 
+      // Choose which color to use
+      var theColor = '#E74C3C'; // default
+      if($('#selector-food').hasClass('selected'))
+        theColor = '#E74C3C';
+      if($('#selector-drug').hasClass('selected'))
+        theColor = '#3498db';
+      if($('#selector-device').hasClass('selected'))
+        theColor = '#f39c12';
       // Render as variable-size "bubble" (circle)
-      L.circleMarker(data.latlng, {
-        icon: L.mapbox.marker.icon({
-          'marker-color': '#f22',
-          'marker-symbol': 'circle-stroked'
-        }),
-        radius: $scope.affectedCountries[data.results.query[0]] // TODO: Needs to be improved...
-      }).bindPopup(content).addTo(areas);
+      var geojsonMarkerOptions = {
+        radius: $scope.affectedCountries[data.results.query[0]]>35?
+          35:$scope.affectedCountries[data.results.query[0]], // TODO: Needs to be improved...
+        fillColor: theColor,
+        color: theColor,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.3
+      };
+      L.circleMarker(data.latlng,
+        geojsonMarkerOptions
+      ).bindPopup(content)
+        .addTo(areas);
     }
     $scope.errorHappenedMapArea = false;
   }
