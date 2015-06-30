@@ -339,16 +339,16 @@ angular.module('defenderApp')
           $scope.recallResultsList = [];
 
           if($('#selector-food').hasClass('selected')) {
-            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food-recalls in the past 90 days');
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food recalls in the past 90 days');
             $scope.getApiSearchTermFood();
           }
           else if($('#selector-drug').hasClass('selected')) {
-            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug-recalls in the past 90 days');
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug recalls in the past 90 days');
             $scope.getApiSearchTermDrug();
             console.log('called drug')
           }
           else if($('#selector-device').hasClass('selected')) {
-            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device-recalls in the past 90 days');
+            $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device recalls in the past 90 days');
             $scope.getApiSearchTermDevice();
           }
         }

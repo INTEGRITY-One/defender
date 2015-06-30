@@ -352,6 +352,15 @@ module.exports = function (grunt) {
           ]
         }, {
           expand: true,
+          cwd: '<%= yeoman.client %>',
+          dest: '<%= yeoman.client %>/bower_components/bootstrap-theme-bootswatch-flatly/fonts',
+          filter: 'isFile',
+          flatten: true,
+          src: [
+            'bower_components/bootstrap/fonts/*'
+          ]
+        }, {
+          expand: true,
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/public/assets/images',
           src: ['generated/*']
