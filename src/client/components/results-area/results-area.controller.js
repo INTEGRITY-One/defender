@@ -8,56 +8,56 @@ defender.affectedStates = ['wv','al','ak','az','ar','ca','co','ct','de','fl','ga
 defender.affectedStatesSynonyms = [];
 //synonyms for each state that could potentially show up in results
 //0th is 'begins with' check, 1th is 'equality' check, remaining are inner text checks. xx\\ check to parse instances with \n
-defender.affectedStatesSynonyms['wv'] = ['wv ','wv', 'west virginia',',wv,',' wv.',', wv.', ', wv,',' wv ','wv\\'];
-defender.affectedStatesSynonyms['al'] = ['al ','al', 'alabama',',al,',' al.',', al.', ', al,',' al ','al\\'];
-defender.affectedStatesSynonyms['ak'] = ['ak ','ak', 'alaska',',ak,',' ak.',', ak.', ', ak,',' ak ','ak\\'];
-defender.affectedStatesSynonyms['az'] = ['az ','az', 'arizona',',az,',' az.',', az.', ', az,',' az ','az\\'];
-defender.affectedStatesSynonyms['ar'] = ['ar ','ar', 'arkansas',',ar,',' ar.',', ar.', ', ar,',' ar ','ar\\'];
-defender.affectedStatesSynonyms['ca'] = ['ca ','ca', 'california',',ca,',' ca.',', ca.', ', ca,',' ca ','ca\\'];
-defender.affectedStatesSynonyms['co'] = ['co ','co', 'colorado',',co,',' co.',', co.', ', co,',' co ','co\\'];
-defender.affectedStatesSynonyms['ct'] = ['ct ','ct', 'connecticut',',ct,',' ct.',', ct.', ', ct,',' ct ','ct\\'];
-defender.affectedStatesSynonyms['de'] = ['de ','de', 'delaware',',de,',' de.',', de.', ', de,',' de ','de\\'];
-defender.affectedStatesSynonyms['fl'] = ['fl ','fl', 'florida',',fl,',' fl.',', fl.', ', fl,',' fl ','fl\\'];
-defender.affectedStatesSynonyms['ga'] = ['ga ','ga', 'georgia',',ga,',' ga.',', ga.', ', ga,',' ga ','ga\\'];
-defender.affectedStatesSynonyms['hi'] = ['hi ','hi', 'hawaii',',hi,',' hi.',', hi.', ', hi,',' hi ','hi\\'];
-defender.affectedStatesSynonyms['id'] = ['id ','id', 'idaho',',id,',' id.',', id.', ', id,',' id ','id\\'];
-defender.affectedStatesSynonyms['il'] = ['il ','il', 'illinois',',il,',' il.',', il.', ', il,',' il ','il\\'];
-defender.affectedStatesSynonyms['in'] = ['in ','in', 'indiana',',in,',' in.',', in.', ', in,','in\\'];
-defender.affectedStatesSynonyms['ia'] = ['ia ','ia', 'iowa',',ia,',' ia.',', ia.', ', ia,',' ia ','ia\\'];
-defender.affectedStatesSynonyms['ks'] = ['ks ','ks', 'kansas',',ks,',' ks.',', ks.', ', ks,',' ks ','ks\\'];
-defender.affectedStatesSynonyms['ky'] = ['ky ','ky', 'kentucky',',ky,',' ky.',', ky.', ', ky,',' ky ','ky\\'];
-defender.affectedStatesSynonyms['la'] = ['la ','la', 'louisiana',',la,',' la.',', la.', ', la,',' la ','la\\'];
-defender.affectedStatesSynonyms['me'] = ['me ','me', 'maine',',me,',' me.',', me.', ', me,',' me ','me\\'];
-defender.affectedStatesSynonyms['md'] = ['md ','md', 'maryland',',md,',' md.',', md.', ', md,',' md ','md\\'];
-defender.affectedStatesSynonyms['ma'] = ['ma ','ma', 'massachusetts',',ma,',' ma.',', ma.', ', ma,',' ma ','ma\\'];
-defender.affectedStatesSynonyms['mi'] = ['mi ','mi', 'michigan',',mi,',' mi.',', mi.', ', mi,',' mi ','mi\\'];
-defender.affectedStatesSynonyms['mn'] = ['mn ','mn', 'minnesota',',mn,',' mn.',', mn.', ', mn,',' mn ','mn\\'];
-defender.affectedStatesSynonyms['ms'] = ['ms ','ms', 'mississippi',',ms,',' ms.',', ms.', ', ms,',' ms ','ms\\'];
-defender.affectedStatesSynonyms['mo'] = ['mo ','mo', 'missouri',',mo,',' mo.',', mo.', ', mo,',' mo ','mo\\'];
-defender.affectedStatesSynonyms['mt'] = ['mt ','mt', 'montana',',mt,',' mt.',', mt.', ', mt,',' mt ','mt\\'];
-defender.affectedStatesSynonyms['ne'] = ['ne ','ne', 'nebraska',',ne,',' ne.',', ne.', ', ne,',' ne ','ne\\'];
-defender.affectedStatesSynonyms['nv'] = ['nv ','nv', 'nevada',',nv,',' nv.',', nv.', ', nv,',' nv ','nv\\'];
-defender.affectedStatesSynonyms['nh'] = ['nh ','nh', 'new hampshire',',nh,',' nh.',', nh.', ', nh,',' nh ','nh\\'];
-defender.affectedStatesSynonyms['nj'] = ['nj ','nj', 'new jersey',',nj,',' nj.',', nj.', ', nj,',' nj ','nj\\'];
-defender.affectedStatesSynonyms['nm'] = ['nm ','nm', 'new mexico',',nm,',' nm.',', nm.', ', nm,',' nm ','nm\\'];
-defender.affectedStatesSynonyms['ny'] = ['ny ','ny', 'new york',',ny,',' ny.',', ny.', ', ny,',' ny ','ny\\'];
-defender.affectedStatesSynonyms['nc'] = ['nc ','nc', 'north carolina',',nc,',' nc.',', nc.', ', nc,',' nc ','nc\\'];
-defender.affectedStatesSynonyms['nd'] = ['nd ','nd', 'north dakota',',nd,',' nd.',', nd.', ', nd,',' nd ','nd\\'];
-defender.affectedStatesSynonyms['oh'] = ['oh ','oh', 'ohio',',oh,',' oh.',', oh.', ', oh,',' oh ','oh\\'];
-defender.affectedStatesSynonyms['ok'] = ['ok ','ok', 'oklahoma',',ok,',' ok.',', ok.', ', ok,',' ok ','ok\\'];
-defender.affectedStatesSynonyms['or'] = ['or ','or', 'oregon',',or,',' or.',', or.', ', or,',' or ','or\\'];
-defender.affectedStatesSynonyms['pa'] = ['pa ','pa', 'pennsylvania',',pa,',' pa.',', pa.', ', pa,','pa\\'];
-defender.affectedStatesSynonyms['ri'] = ['ri ','ri', 'rhode island',',ri,',' ri.',', ri.', ', ri,',' ri ','ri\\'];
-defender.affectedStatesSynonyms['sc'] = ['sc ','sc', 'south carolina',',sc,',' sc.',', sc.', ', sc,',' sc ','sc\\'];
-defender.affectedStatesSynonyms['sd'] = ['sd ','sd', 'south dakota',',sd,',' sd.',', sd.', ', sd,',' sd ','sd\\'];
-defender.affectedStatesSynonyms['tn'] = ['tn ','tn', 'tennessee',',tn,',' tn.',', tn.', ', tn,',' tn ','tn\\'];
-defender.affectedStatesSynonyms['tx'] = ['tx ','tx', 'texas',',tx,',' tx.',', tx.', ', tx,',' tx ','tx\\'];
-defender.affectedStatesSynonyms['ut'] = ['ut ','ut', 'utah',',ut,',' ut.',', ut.', ', ut,',' ut ','ut\\'];
-defender.affectedStatesSynonyms['vt'] = ['vt ','vt', 'vermont',',vt,',' vt.',', vt.', ', vt,',' vt ','vt\\'];
-defender.affectedStatesSynonyms['va'] = ['va ','va', 'virginia',',va,',' va.',', va.', ', va,',' va ','va\\'];
-defender.affectedStatesSynonyms['wa'] = ['wa ','wa', 'washington',',wa,',' wa.',', wa.', ', wa,',' wa ','wa\\'];
-defender.affectedStatesSynonyms['wi'] = ['wi ','wi', 'wisconsin',',wi,',' wi.',', wi.', ', wi,',' wi ','wi\\'];
-defender.affectedStatesSynonyms['wy'] = ['wy ','wy', 'wyoming',',wy,',' wy.',', wy.', ', wy,',' wy ','wy\\'];
+defender.affectedStatesSynonyms.wv = ['wv ','wv', 'west virginia',',wv,',' wv.',', wv.', ', wv,',' wv ','wv\\'];
+defender.affectedStatesSynonyms.al = ['al ','al', 'alabama',',al,',' al.',', al.', ', al,',' al ','al\\'];
+defender.affectedStatesSynonyms.ak = ['ak ','ak', 'alaska',',ak,',' ak.',', ak.', ', ak,',' ak ','ak\\'];
+defender.affectedStatesSynonyms.az = ['az ','az', 'arizona',',az,',' az.',', az.', ', az,',' az ','az\\'];
+defender.affectedStatesSynonyms.ar = ['ar ','ar', 'arkansas',',ar,',' ar.',', ar.', ', ar,',' ar ','ar\\'];
+defender.affectedStatesSynonyms.ca = ['ca ','ca', 'california',',ca,',' ca.',', ca.', ', ca,',' ca ','ca\\'];
+defender.affectedStatesSynonyms.co = ['co ','co', 'colorado',',co,',' co.',', co.', ', co,',' co ','co\\'];
+defender.affectedStatesSynonyms.ct = ['ct ','ct', 'connecticut',',ct,',' ct.',', ct.', ', ct,',' ct ','ct\\'];
+defender.affectedStatesSynonyms.de = ['de ','de', 'delaware',',de,',' de.',', de.', ', de,',' de ','de\\'];
+defender.affectedStatesSynonyms.fl = ['fl ','fl', 'florida',',fl,',' fl.',', fl.', ', fl,',' fl ','fl\\'];
+defender.affectedStatesSynonyms.ga = ['ga ','ga', 'georgia',',ga,',' ga.',', ga.', ', ga,',' ga ','ga\\'];
+defender.affectedStatesSynonyms.hi = ['hi ','hi', 'hawaii',',hi,',' hi.',', hi.', ', hi,',' hi ','hi\\'];
+defender.affectedStatesSynonyms.id = ['id ','id', 'idaho',',id,',' id.',', id.', ', id,',' id ','id\\'];
+defender.affectedStatesSynonyms.il = ['il ','il', 'illinois',',il,',' il.',', il.', ', il,',' il ','il\\'];
+defender.affectedStatesSynonyms.in = ['in ','in', 'indiana',',in,',' in.',', in.', ', in,','in\\'];
+defender.affectedStatesSynonyms.ia = ['ia ','ia', 'iowa',',ia,',' ia.',', ia.', ', ia,',' ia ','ia\\'];
+defender.affectedStatesSynonyms.ks = ['ks ','ks', 'kansas',',ks,',' ks.',', ks.', ', ks,',' ks ','ks\\'];
+defender.affectedStatesSynonyms.ky = ['ky ','ky', 'kentucky',',ky,',' ky.',', ky.', ', ky,',' ky ','ky\\'];
+defender.affectedStatesSynonyms.la = ['la ','la', 'louisiana',',la,',' la.',', la.', ', la,',' la ','la\\'];
+defender.affectedStatesSynonyms.me = ['me ','me', 'maine',',me,',' me.',', me.', ', me,',' me ','me\\'];
+defender.affectedStatesSynonyms.md = ['md ','md', 'maryland',',md,',' md.',', md.', ', md,',' md ','md\\'];
+defender.affectedStatesSynonyms.ma = ['ma ','ma', 'massachusetts',',ma,',' ma.',', ma.', ', ma,',' ma ','ma\\'];
+defender.affectedStatesSynonyms.mi = ['mi ','mi', 'michigan',',mi,',' mi.',', mi.', ', mi,',' mi ','mi\\'];
+defender.affectedStatesSynonyms.mn = ['mn ','mn', 'minnesota',',mn,',' mn.',', mn.', ', mn,',' mn ','mn\\'];
+defender.affectedStatesSynonyms.ms = ['ms ','ms', 'mississippi',',ms,',' ms.',', ms.', ', ms,',' ms ','ms\\'];
+defender.affectedStatesSynonyms.mo = ['mo ','mo', 'missouri',',mo,',' mo.',', mo.', ', mo,',' mo ','mo\\'];
+defender.affectedStatesSynonyms.mt = ['mt ','mt', 'montana',',mt,',' mt.',', mt.', ', mt,',' mt ','mt\\'];
+defender.affectedStatesSynonyms.ne = ['ne ','ne', 'nebraska',',ne,',' ne.',', ne.', ', ne,',' ne ','ne\\'];
+defender.affectedStatesSynonyms.nv = ['nv ','nv', 'nevada',',nv,',' nv.',', nv.', ', nv,',' nv ','nv\\'];
+defender.affectedStatesSynonyms.nh = ['nh ','nh', 'new hampshire',',nh,',' nh.',', nh.', ', nh,',' nh ','nh\\'];
+defender.affectedStatesSynonyms.nj = ['nj ','nj', 'new jersey',',nj,',' nj.',', nj.', ', nj,',' nj ','nj\\'];
+defender.affectedStatesSynonyms.nm = ['nm ','nm', 'new mexico',',nm,',' nm.',', nm.', ', nm,',' nm ','nm\\'];
+defender.affectedStatesSynonyms.ny = ['ny ','ny', 'new york',',ny,',' ny.',', ny.', ', ny,',' ny ','ny\\'];
+defender.affectedStatesSynonyms.nc = ['nc ','nc', 'north carolina',',nc,',' nc.',', nc.', ', nc,',' nc ','nc\\'];
+defender.affectedStatesSynonyms.nd = ['nd ','nd', 'north dakota',',nd,',' nd.',', nd.', ', nd,',' nd ','nd\\'];
+defender.affectedStatesSynonyms.oh = ['oh ','oh', 'ohio',',oh,',' oh.',', oh.', ', oh,',' oh ','oh\\'];
+defender.affectedStatesSynonyms.ok = ['ok ','ok', 'oklahoma',',ok,',' ok.',', ok.', ', ok,',' ok ','ok\\'];
+defender.affectedStatesSynonyms.or = ['or ','or', 'oregon',',or,',' or.',', or.', ', or,',' or ','or\\'];
+defender.affectedStatesSynonyms.pa = ['pa ','pa', 'pennsylvania',',pa,',' pa.',', pa.', ', pa,','pa\\'];
+defender.affectedStatesSynonyms.ri = ['ri ','ri', 'rhode island',',ri,',' ri.',', ri.', ', ri,',' ri ','ri\\'];
+defender.affectedStatesSynonyms.sc = ['sc ','sc', 'south carolina',',sc,',' sc.',', sc.', ', sc,',' sc ','sc\\'];
+defender.affectedStatesSynonyms.sd = ['sd ','sd', 'south dakota',',sd,',' sd.',', sd.', ', sd,',' sd ','sd\\'];
+defender.affectedStatesSynonyms.tn = ['tn ','tn', 'tennessee',',tn,',' tn.',', tn.', ', tn,',' tn ','tn\\'];
+defender.affectedStatesSynonyms.tx = ['tx ','tx', 'texas',',tx,',' tx.',', tx.', ', tx,',' tx ','tx\\'];
+defender.affectedStatesSynonyms.ut = ['ut ','ut', 'utah',',ut,',' ut.',', ut.', ', ut,',' ut ','ut\\'];
+defender.affectedStatesSynonyms.vt = ['vt ','vt', 'vermont',',vt,',' vt.',', vt.', ', vt,',' vt ','vt\\'];
+defender.affectedStatesSynonyms.va = ['va ','va', 'virginia',',va,',' va.',', va.', ', va,',' va ','va\\'];
+defender.affectedStatesSynonyms.wa = ['wa ','wa', 'washington',',wa,',' wa.',', wa.', ', wa,',' wa ','wa\\'];
+defender.affectedStatesSynonyms.wi = ['wi ','wi', 'wisconsin',',wi,',' wi.',', wi.', ', wi,',' wi ','wi\\'];
+defender.affectedStatesSynonyms.wy = ['wy ','wy', 'wyoming',',wy,',' wy.',', wy.', ', wy,',' wy ','wy\\'];
 //list of foreign countries
 defender.affectedForeignCountries = ['afghanistan','albania','algeria','andorra','angola','antigua and barbuda','argentina','armenia','aruba','australia','austria','azerbaijan'];
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['bahamas','bahrain','bangladesh','barbados','belarus','belgium','belize','benin','bhutan','bolivia','bosnia and herzegovina','botswana','brazil','brunei','bulgaria','burkina faso','burma','burundi']);
@@ -85,30 +85,32 @@ defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['y
 defender.affectedForeignCountries = defender.affectedForeignCountries.concat(['zambia','zimbabwe']);
 
 defender.updateAffectedAreaValues = function() {
-  for(var i = 0; i < defender.affectedStates.length; i++) {
+  var i = 0;
+  var j = 0;
+  for(i = 0; i < defender.affectedStates.length; i++) {
     defender.affectedStates[defender.affectedStates[i]] = 0;
   }
-  for(var i = 0; i < defender.affectedForeignCountries.length; i++) {
+  for(i = 0; i < defender.affectedForeignCountries.length; i++) {
     defender.affectedForeignCountries[defender.affectedForeignCountries[i]] = 0;
   }
 
-  for(var i = 0; i < defender.currentResults.length; i++) {
-    var result = defender.currentResults[i]['distribution_pattern'].toLowerCase();
+  for(i = 0; i < defender.currentResults.length; i++) {
+    var result = defender.currentResults[i].distribution_pattern.toLowerCase();
     var parsedResult = result;
     var stateDetected = false;
 
     //worldwide check, however this does not appear to be a valid case
-    if(result.indexOf('worldwide') !== -1 && 1==2) {
-      for (var j = 0; j < defender.affectedStates.length; j++) {
+    if(result.indexOf('worldwide') !== -1 && 1===2) {
+      for (j = 0; j < defender.affectedStates.length; j++) {
         defender.affectedStates[defender.affectedStates[j]]++;
       }
-      for (var j = 0; j < defender.affectedForeignCountries.length; j++) {
+      for (j = 0; j < defender.affectedForeignCountries.length; j++) {
         defender.affectedForeignCountries[defender.affectedForeignCountries[j]]++;
       }
     }
 
     //state check
-    for (var j = 0; j < defender.affectedStates.length; j++) {
+    for (j = 0; j < defender.affectedStates.length; j++) {
       parsedResult = defender.updateAffectedAreaStateParse(result, defender.affectedStates[j]);
       if (parsedResult !== result) {
         defender.affectedStates[defender.affectedStates[j]]++;
@@ -127,14 +129,14 @@ defender.updateAffectedAreaValues = function() {
         result.indexOf(', us,') !== -1 ||
         result.indexOf(', us.') !== -1 ||
         result.substr(2) === 'us') {
-        for (var j = 0; j < defender.affectedStates.length; j++) {
+        for (j = 0; j < defender.affectedStates.length; j++) {
           defender.affectedStates[defender.affectedStates[j]]++;
         }
       }
     }
 
     //foreign check
-    for(var j = 0; j < defender.affectedForeignCountries.length; j++) {
+    for(j = 0; j < defender.affectedForeignCountries.length; j++) {
       if(result.indexOf(defender.affectedForeignCountries[j]) !== -1) {
         defender.affectedForeignCountries[defender.affectedForeignCountries[j]]++;
         result = result.replace(defender.affectedForeignCountries[j],'');
@@ -144,23 +146,24 @@ defender.updateAffectedAreaValues = function() {
 };
 
 defender.updateAffectedAreaStateParse = function(text, state) {
+  var i = 0;
 
   //if text begins with acronym synonym
   if(text.length >= defender.affectedStatesSynonyms[state][0].length) {
     if (text.substr(defender.affectedStatesSynonyms[state][0].length) === defender.affectedStatesSynonyms[state][0]) {
-      text = text.replace(defender.affectedStatesSynonyms[state][i], '');
+      text = text.replace(defender.affectedStatesSynonyms[state][0], '');
       return text;
     }
   }
 
   //if text is just the acronym synonym
   if(text === defender.affectedStatesSynonyms[state][1]) {
-    text = text.replace(defender.affectedStatesSynonyms[state][i],'');
+    text = text.replace(defender.affectedStatesSynonyms[state][1],'');
     return text;
   }
 
   //if synonyms in text
-  for(var i = 2; i < defender.affectedStatesSynonyms[state].length; i++) {
+  for(i = 2; i < defender.affectedStatesSynonyms[state].length; i++) {
     if(text.indexOf(defender.affectedStatesSynonyms[state][i]) !== -1) {
       text = text.replace(defender.affectedStatesSynonyms[state][i],'');
       return text;
@@ -168,7 +171,7 @@ defender.updateAffectedAreaStateParse = function(text, state) {
   }
 
   return text;
-}
+};
 
 angular.module('defenderApp')
   .controller('ResultsAreaCtrl', function ($scope, $http) {
@@ -176,7 +179,7 @@ angular.module('defenderApp')
 
     //on error
     $scope.errorHappenedResultsArea = false;
-    $scope.currSearchTerm = "";
+    $scope.currSearchTerm = '';
 
     //pagination (deprec)
     $scope.skip = 30;
@@ -401,40 +404,3 @@ angular.module('defenderApp')
       console.log($scope.skip)
     }
   });
-
-/**
- * Ng-Repeat implementation working with number ranges.
- *
- * @author Umed Khudoiberdiev
- */
-angular.module('defenderApp').directive('ngRepeatRange', ['$compile', function ($compile) {
-  return {
-    replace: true,
-    scope: { from: '=', to: '=', step: '=' },
-
-    link: function (scope, element, attrs) {
-
-      // returns an array with the range of numbers
-      // you can use _.range instead if you use underscore
-      function range(from, to, step) {
-        var array = [];
-        while (from + step <= to)
-          array[array.length] = from += step;
-
-        return array;
-      }
-
-      // prepare range options
-      var from = scope.from || 0;
-      var step = scope.step || 1;
-      var to   = scope.to || attrs.ngRepeatRange;
-
-      // get range of numbers, convert to the string and add ng-repeat
-      var rangeString = range(from, to + 1, step).join(',');
-      angular.element(element).attr('ng-repeat', 'n in [' + rangeString + ']');
-      angular.element(element).removeAttr('ng-repeat-range');
-
-      $compile(element)(scope);
-    }
-  };
-}]);

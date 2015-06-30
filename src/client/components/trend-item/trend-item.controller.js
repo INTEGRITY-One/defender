@@ -1,9 +1,9 @@
 'use strict';
 
-defender = defender || {};
+var defender = defender || {};
 
 angular.module('defenderApp')
-  .controller('TrendItemCtrl', function ($scope, $http) {
+  .controller('TrendItemCtrl', function ($scope) {
 
 
     $scope.updateRssUI = function (className, idx, link, title, contentSnippet, publishedDate) {
@@ -17,15 +17,15 @@ angular.module('defenderApp')
       el.append('<p>' + publishedDate + '</p>');
 
       return true;
-    }
+    };
 
-    $scope.parseRSS = function (url, callback) {
+    $scope.parseRSS = function (url) {
       $.ajax({
         url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=8&callback=?&q=' + encodeURIComponent(url),
         dataType: 'jsonp',
         success: function (data) {
           for (var i = 0; i < data.responseData.feed.entries.length; i++) {
-            $('.prototype-news-item-container').parent().append("<div class='col-lg-3 prototype-news-item-container dynamic-news-item'>" + $('.prototype-news-item-container').html() + "</div>");
+            $('.prototype-news-item-container').parent().append('<div class=\'col-lg-3 prototype-news-item-container dynamic-news-item\'>' + $('.prototype-news-item-container').html() + '</div>');
 
             $scope.updateRssUI('.news-item',
               (i + 1),

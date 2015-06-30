@@ -1,19 +1,19 @@
 'use strict';
 
 var defender = defender || {};
-defender.searchTerm = "";
+defender.searchTerm = '';
 defender.toggleAreas = false; // Affected areas off by default
 
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 angular.module('defenderApp')
   .controller('RefinerAreaCtrl', function ($scope) {
     $scope.refineResults = function() {
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
-    }
+    };
 
     $scope.selectFood = function() {
       $('#selector-food').removeClass('btn-default');
@@ -27,7 +27,7 @@ angular.module('defenderApp')
       $('#selector-device').removeClass('selected');
       $('#input-refiner').val('');
       defender.searchTerm = '_execFood';
-    }
+    };
 
     $scope.selectDrug = function() {
       $('#selector-drug').removeClass('btn-default');
@@ -41,7 +41,7 @@ angular.module('defenderApp')
       $('#selector-device').removeClass('selected');
       $('#input-refiner').val('');
       defender.searchTerm = '_execDrug';
-    }
+    };
 
     $scope.selectDevice = function() {
       $('#selector-device').removeClass('btn-default');
@@ -55,50 +55,50 @@ angular.module('defenderApp')
       $('#selector-drug').removeClass('selected');
       $('#input-refiner').val('');
       defender.searchTerm = '_execDevice';
-    }
+    };
 
     var randomFoodResultList = [
-      "ice cream",
-      "cheese",
-      "Bread",
-      "Burrito",
-      "Beef",
-      "Pork",
-      "Chicken",
-      "Dip",
-      "Whole",
-      "Health one",
-      "Sugar",
-      "Milk",
-      "Listeria",
-      "Organic",
-      "Soup",
-      "Corn"];
+      'ice cream',
+      'cheese',
+      'Bread',
+      'Burrito',
+      'Beef',
+      'Pork',
+      'Chicken',
+      'Dip',
+      'Whole',
+      'Health one',
+      'Sugar',
+      'Milk',
+      'Listeria',
+      'Organic',
+      'Soup',
+      'Corn'];
 
     var randomDrugResultList = [
-      "sodium",
-      "Penicillin",
-      "Contamination",
-      "Attix",
-      "Capsules",
-      "Health",
-      "Control",
-      "Pharmacy",
-      "Injection",
-      "Pollen",
-      "Expiry"];
+      'sodium',
+      'Penicillin',
+      'Contamination',
+      'Attix',
+      'Capsules',
+      'Health',
+      'Control',
+      'Pharmacy',
+      'Injection',
+      'Pollen',
+      'Expiry'];
 
     var randomDeviceResultList = [
-      "Hip",
-      "Knee",
-      "Shoulder",
-      "Heart",
-      "Pediatric",
-      "Expiry",
-      "Breath",
-      "Surgical",
-      "Pump",
-      "Medical"];
+      'Hip',
+      'Knee',
+      'Shoulder',
+      'Heart',
+      'Pediatric',
+      'Expiry',
+      'Breath',
+      'Surgical',
+      'Pump',
+      'Medical'];
 
     $scope.refineRandomResults = function() {
       var newTerm = $('#input-refiner').val();
@@ -116,7 +116,7 @@ angular.module('defenderApp')
       var term = $('#input-refiner').val();
       defender.searchTerm = term;
       return true;
-    }
+    };
 
     $scope.getRandomResult = function(randomList) {
       if(randomList.length === 0) {
@@ -125,7 +125,7 @@ angular.module('defenderApp')
       var r = Math.floor((Math.random() * randomList.length));
       $('#input-refiner').val(randomList[r]);
       return true;
-    }
+    };
 
     $scope.toggleAffectedAreas = function() {
       if (!defender.toggleAreas) {
@@ -136,7 +136,7 @@ angular.module('defenderApp')
       else {
         $('#chk-affected-areas').removeClass('selected');
         defender.toggleAreas = false;
-        console.log('Toggled affected areas off')
+        console.log('Toggled affected areas off');
       }
-    }
+    };
   });
