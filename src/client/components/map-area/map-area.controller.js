@@ -2,24 +2,19 @@
 
 angular.module('defenderApp')
   .controller('MapAreaCtrl', function ($scope, $http) {
-    //this file configures the MapBox map to be displayed on client
+    // This file configures the MapBox map to be displayed on client
     // Initialize some variables
     var map;
     $scope.currResults = []; // Resultset from module
-    var features;
-    var areas;
-    var cities = [];
-    var cityCounts = [];
-    var cityGeoData = [];
-    var states = [];
-    var stateCounts = [];
-    var stateGeoData = [];
-    var countries = [];
-    var countryCounts = [];
-    var countryGeoData = [];
+    // Primary FeatureGroups to display on the map
+    var features, areas;
+    // Arrays for Cities, States, & Countries
+    var cities = [], cityCounts = [], cityGeoData = [];
+    var states = [], stateCounts = [], stateGeoData = [];
+    var countries = [], countryCounts = [], countryGeoData = [];
     var ready = false;
 
-    // Provide your access token
+    // Provide mapbox access token & configure geocoder
     L.mapbox.accessToken = 'pk.eyJ1IjoiZWhvbGxpbmdzd29ydGgiLCJhIjoiYmExYTk3MGYxOTJiYzVmNjAxM2E2YTI3NmU3NTM3YTIifQ.sV3ISTtVIipf3i9pvAYy8Q';
     var geocoder = L.mapbox.geocoder('mapbox.places');
 
@@ -33,27 +28,28 @@ angular.module('defenderApp')
       iconUrl: 'assets/images/drug_blue.png',
       iconSize: [30, 30]
     });
-    // Custom icon for Food recalls
+    // Custom icon for Device recalls
     var devIcon = L.icon({
       iconUrl: 'assets/images/device_yellow.png',
       iconSize: [30, 30]
     });
 
-    // Create a map in the div #map
+    // Initialize the map for the first time
     $scope.initMap = function () {
-      console.log('map.controller: Attempting to Initialize the map...');
-      // One-time call to set the module-level function
-      if (defender.resetMap === undefined) {
+      console.log('map.controller: Initializing the map...');
+      // One-time call to set the module-level function - NOT presently needed...
+      /*if (defender.resetMap === undefined) {
         defender.resetMap = $scope.resetMap;
         console.log("map.controller: Attached map reset method to global context!");
-      }
+      }*/
 
       // This window interval acts as a handler for asynchronous processing
       window.setInterval(function () {
         if (defender.currentResults !== undefined) {
           // Looks for data updates from component scope
-          if (defender.currentResults !== $scope.currResults || defender.toggleAreas != $scope.toggleAreas) {
-            console.log('map.controller: State of results or Affected Areas toggle changed - updating map!');
+          if (defender.currentResults !== $scope.currResults) {
+            console.log('map.controller: Detected change in Resultset - updating map!');
+            // Set local variables to module-level values (to detect subsequent changes)
             $scope.currResults = defender.currentResults;
             $scope.affectedStates = defender.affectedStates;
             $scope.affectedCountries = defender.affectedForeignCountries;
@@ -63,12 +59,15 @@ angular.module('defenderApp')
             $scope.resetMap();
           }
 
-          // Ensure we don't attempt to render the map until ALL geocoding is complete
-          if (ready && cities.length > 0 && cityGeoData.length === cities.length &&
-              states.length > 0 && stateGeoData.length === states.length &&
-              countries.length > 0 && countryGeoData.length === countries.length) {
+          // Ensure we don't attempt to render FeatureGroups until ALL geocoding is complete
+          // Note: Tricky edge cases where cities == 0 OR states == 0 OR countries == 0 are OK!
+          if (ready && ((cities.length > 0 && cityGeoData.length === cities.length) || cities.length === 0) &&
+              ((states.length > 0 && stateGeoData.length === states.length) || states.length === 0) &&
+              ((countries.length > 0 && countryGeoData.length === countries.length) || countries.length === 0)) {
             console.log("map.controller: Detected completion of geocoding - rendering features and areas!");
             ready = false; // reset the "ready" flag
+
+            // Render the FeatureGroups onto the map
             renderFeatureGroups();
           }
         }
@@ -190,10 +189,14 @@ angular.module('defenderApp')
       //console.log("map.controller: Finished building " + (stateGeoData.length + countryGeoData.length) + " Affected Area bubbles");
 
       // Finally, add Layer control to Map and autozoom
+      /* Additional basemap options:
+          'Mapbox Light': L.mapbox.tileLayer('mapbox.light')
+          'Mapbox Dark': L.mapbox.tileLayer('mapbox.dark')
+          'Mapbox Pencil': L.mapbox.tileLayer('mapbox.pencil')
+      */
       L.control.layers({
-        'Mapbox Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map), //'Mapbox Light': L.mapbox.tileLayer('mapbox.light'),
-        'Mapbox Dark': L.mapbox.tileLayer('mapbox.dark'),
-        'Mapbox Comic': L.mapbox.tileLayer('mapbox.comic') //'Mapbox Pencil': L.mapbox.tileLayer('mapbox.pencil')
+        'Basic Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
+        'Comic Book': L.mapbox.tileLayer('mapbox.comic')
       }, {
         'Recall Sites': features.addTo(map),
         'Affected Areas': areas
