@@ -32,6 +32,10 @@ cd to the defender\src directory and use the following command:
 ```
 $ npm install
 ```
+Build the application with grunt
+```
+$ grunt build
+```
 
 #Start Defender Application
 cd to the defender\src directory and use the following command:
