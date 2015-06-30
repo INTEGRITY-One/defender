@@ -9,6 +9,12 @@
 var _ = require('lodash');
 var _http = require('http');
 
+var formatDate = function(date) {
+  var yyyy = date.getFullYear();
+  var mm = date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+  var dd = date.getDate() < 10 ? "0" + (date.getDate()) : date.getDate();
+  return yyyy.toString() + mm.toString() + dd.toString();
+}
 
 // Get list of recalls
 exports.index = function(req, res) {
@@ -19,16 +25,9 @@ exports.index = function(req, res) {
   var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=100";
 
   var curDate = new Date();
-  var yyyy = curDate.getFullYear();
-  var mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  var dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedCurDate = yyyy.toString() + mm.toString() + dd.toString();
-
+  var formattedCurDate = formatDate(curDate);
   curDate.setDate(curDate.getDate() - 90);
-  yyyy = curDate.getFullYear();
-  mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedPrevDate = yyyy.toString() + mm.toString() + dd.toString();
+  var formattedPrevDate = formatDate(curDate);
 
   console.log(formattedPrevDate);
   console.log(formattedCurDate);
@@ -85,16 +84,9 @@ exports.getFood = function(req, res) {
   var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=100";
 
   var curDate = new Date();
-  var yyyy = curDate.getFullYear();
-  var mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  var dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedCurDate = yyyy.toString() + mm.toString() + dd.toString();
-
+  var formattedCurDate = formatDate(curDate);
   curDate.setDate(curDate.getDate() - 90);
-  yyyy = curDate.getFullYear();
-  mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedPrevDate = yyyy.toString() + mm.toString() + dd.toString();
+  var formattedPrevDate = formatDate(curDate);
 
   console.log(formattedPrevDate);
   console.log(formattedCurDate);
@@ -151,16 +143,9 @@ exports.getDevice = function(req, res) {
   var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=100";
 
   var curDate = new Date();
-  var yyyy = curDate.getFullYear();
-  var mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  var dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedCurDate = yyyy.toString() + mm.toString() + dd.toString();
-
+  var formattedCurDate = formatDate(curDate);
   curDate.setDate(curDate.getDate() - 90);
-  yyyy = curDate.getFullYear();
-  mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedPrevDate = yyyy.toString() + mm.toString() + dd.toString();
+  var formattedPrevDate = formatDate(curDate);
 
   console.log(formattedPrevDate);
   console.log(formattedCurDate);
@@ -217,16 +202,9 @@ exports.getDrug = function(req, res) {
   var baseQueryString = "api_key=97hexPQBqiRG7qeNL5LCubmalvKuWQIhCjnrOHLB&limit=100";
 
   var curDate = new Date();
-  var yyyy = curDate.getFullYear();
-  var mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  var dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedCurDate = yyyy.toString() + mm.toString() + dd.toString();
-
+  var formattedCurDate = formatDate(curDate);
   curDate.setDate(curDate.getDate() - 90);
-  yyyy = curDate.getFullYear();
-  mm = curDate.getMonth() < 9 ? "0" + (curDate.getMonth() + 1) : curDate.getMonth() + 1;
-  dd = curDate.getDate() < 10 ? "0" + (curDate.getDate() + 1) : curDate.getDate() + 1;
-  var formattedPrevDate = yyyy.toString() + mm.toString() + dd.toString();
+  var formattedPrevDate = formatDate(curDate);
 
   console.log(formattedPrevDate);
   console.log(formattedCurDate);

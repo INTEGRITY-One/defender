@@ -69,12 +69,12 @@ angular.module('defenderApp')
       }
 
       $scope.parseRSS('https://news.google.com/news/feeds?pz=1&cf=all&ned=us&hl=us&q=' + rssTerm + '+recall&output=rss',null);
-      $('#GEO_MAP_0_0').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_MAP_0_0&export=5&h=200');
-      $('#GEO_MAP_0_1').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_MAP_0_1&export=5&h=200');
-      $('#TOP_ENTITIES_0_0').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TOP_ENTITIES_0_0&export=5&h=200');
-      $('#TOP_QUERIES_0_0').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TOP_QUERIES_0_0&export=5&h=200');
-      $('#TIMESERIES_GRAPH_0').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TIMESERIES_GRAPH_0&export=5&h=200');
-      $('#GEO_TABLE_0_0').attr('src','http://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_TABLE_0_0&export=5&h=200');
+      $('#GEO_MAP_0_0').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_MAP_0_0&export=5&h=200');
+      $('#GEO_MAP_0_1').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_MAP_0_1&export=5&h=200');
+      $('#TOP_ENTITIES_0_0').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TOP_ENTITIES_0_0&export=5&h=200');
+      $('#TOP_QUERIES_0_0').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TOP_QUERIES_0_0&export=5&h=200');
+      $('#TIMESERIES_GRAPH_0').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=TIMESERIES_GRAPH_0&export=5&h=200');
+      $('#GEO_TABLE_0_0').attr('src','https://www.google.com/trends/fetchComponent?q=' + trendTerm + '%20recall&cid=GEO_TABLE_0_0&export=5&h=200');
     };
 
     defender.queryNews();

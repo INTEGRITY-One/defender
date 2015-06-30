@@ -195,7 +195,7 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food-recalls in the past 90 days');
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" food recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
@@ -213,7 +213,7 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug-recalls in the past 90 days');
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" drug recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
@@ -231,7 +231,7 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device-recalls in the past 90 days');
+          $('#big-query-text-label').text('"' + $scope.currSearchTerm + '" device recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
@@ -249,7 +249,7 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('food-recalls in the past 90 days');
+          $('#big-query-text-label').text('food recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
@@ -264,10 +264,10 @@ angular.module('defenderApp')
           var response = JSON.parse(recallResultsList);
           var results = response.results;
           $scope.totalPages = Math.ceil(response.meta.results.total / $scope.pageSize);
-          $scope.recallResultsList = results;
-          defender.currentResults = results; //for map
+          $scope.recallResultsList = results; //view-scoped
+          defender.currentResults = results; //for map and other controllers
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('drug-recalls in the past 90 days');
+          $('#big-query-text-label').text('drug recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })
@@ -285,7 +285,7 @@ angular.module('defenderApp')
           $scope.recallResultsList = results;
           defender.currentResults = results; //for map
           $('#big-query-text-value').text(response.meta.results.total);
-          $('#big-query-text-label').text('device-recalls in the past 90 days');
+          $('#big-query-text-label').text('device recalls in the past 90 days');
           $scope.formatDates();
           defender.updateAffectedAreaValues();
         })

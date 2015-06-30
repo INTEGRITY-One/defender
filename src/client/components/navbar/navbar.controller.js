@@ -24,8 +24,8 @@ angular.module('defenderApp')
       $('#input-refiner').val('');
       defender.searchTerm = '_execFood';
       defender.toggleAreas = false;
-      $('#chk-affected-areas').removeClass('selected');
-      $('#chk-affected-areas').prop('checked',false);
+      //$('#chk-affected-areas').removeClass('selected');
+      //$('#chk-affected-areas').prop('checked',false);
     });
 
     $scope.isCollapsed = true;
