@@ -6,6 +6,7 @@
 
 .refiner-box {
   margin-top:50px;
+  width:300px;
 }
 
 .refiner-area ul {
@@ -16,7 +17,7 @@
   list-style-type: none;
   display:inline;
 
-  padding:19px;
+  padding:23px;
   padding-top:5px;
   padding-bottom:5px;
   font-family: 'Segoe UI Light';
