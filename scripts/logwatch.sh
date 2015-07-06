@@ -112,7 +112,54 @@ END {printf("%12.3f\n",max)}'`
 echo "Maximum successful page response time (ms): $MAXRESPONSETIME"
 test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name MaxResponseTime --namespace "Defender.ApplicationMetrics" --value $MAXRESPONSETIME --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
 
+# Security Metrics
+AUTHLOG="/var/log/auth.log"
+LASTAUTHLENGTHFILE="$SCRIPTDIR/authloglen.dat"
+CURAUTHLOGLENGTH=`sudo cat $AUTHLOG | wc -l`
+if test -f $LASTAUTHLENGTHFILE
+then
+    LASTAUTHLOGLENGTH=`cat $LASTAUTHLENGTHFILE | awk '{print $1}'`
+else
+    LASTAUTHLOGLENGTH=0
+fi
+
+KERNLOG="/var/log/kern.log"
+LASTKERNLENGTHFILE="$SCRIPTDIR/kernloglen.dat"
+CURKERNLOGLENGTH=`sudo cat $KERNLOG | wc -l`
+if test -f $LASTKERNLENGTHFILE
+then
+    LASTKERNLOGLENGTH=`cat $LASTKERNLENGTHFILE | awk '{print $1}'`
+else
+    LASTKERNLOGLENGTH=0
+fi
+
+# Failed root logins
+FAILEDROOTLOGINS=`sudo cat $AUTHLOG | awk '{if ((NR>'$LASTAUTHLOGLENGTH')&&(NR<='$CURAUTHLOGLENGTH')) print $0}' | grep "authentication failure.*user=root$" | wc -l `
+echo "Failed root login attempts in this interval: $FAILEDROOTLOGINS"
+    test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name FailedRootLogins --namespace "Defender.SecurityMetrics" --value $FAILEDROOTLOGINS --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
+
+# Failed non-root logins
+FAILEDNONROOTLOGINS=`sudo cat $AUTHLOG | awk '{if ((NR>'$LASTAUTHLOGLENGTH')&&(NR<='$CURAUTHLOGLENGTH')) print $0}' | grep "authentication failure.*user=" | grep -v ".*user=root$" | wc -l `
+echo "Failed non-root login attempts in this interval: $FAILEDNONROOTLOGINS"
+    test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name FailedNonRootLogins --namespace "Defender.SecurityMetrics" --value $FAILEDNONROOTLOGINS --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
+
+# Sudo Commands Executed
+SUDOCOUNT=`sudo cat $AUTHLOG | awk '{if ((NR>'$LASTAUTHLOGLENGTH')&&(NR<='$CURAUTHLOGLENGTH')) print $0}' | grep "sudo: .*COMMAND=" | wc -l `
+echo "Sudo commands executed in this interval: $SUDOCOUNT"
+    test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name SudoCmdsExecuted --namespace "Defender.SecurityMetrics" --value $SUDOCOUNT --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
+
+# Brute Force Login Attacks Stopped 
+BFLOGINCOUNT=`sudo cat $KERNLOG | awk '{if ((NR>'$LASTKERNLOGLENGTH')&&(NR<='$CURKERNLOGLENGTH')) print $0}' | grep "LoginBlock:" | wc -l `
+echo "Brute Force Login attacks detected in this interval: $BFLOGINCOUNT"
+    test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name BruteForceLoginsBlocked --namespace "Defender.SecurityMetrics" --value $BFLOGINCOUNT --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
+
+# Port Scans Detected/Stopped 
+PORTSCANCOUNT=`sudo cat $KERNLOG | awk '{if ((NR>'$LASTKERNLOGLENGTH')&&(NR<='$CURKERNLOGLENGTH')) print $0}' | grep "Portscan:" | wc -l `
+echo "Port scans detected in this interval: $PORTSCANCOUNT"
+    test "$SENDMETRIC" -eq 1 && aws cloudwatch put-metric-data --metric-name PortScansBlocked --namespace "Defender.SecurityMetrics" --value $PORTSCANCOUNT --timestamp $NEWLASTUPDATE --dimensions InstanceId=$EC2_INSTANCE_ID
 
 echo "Setting last timestamp to $NEWLASTUPDATE"
 echo "$NEWLASTUPDATE" > $TIMESTAMPFILE
+echo "$CURAUTHLOGLENGTH" > $LASTAUTHLENGTHFILE
+echo "$CURKERNLOGLENGTH" > $LASTKERNLENGTHFILE
 exit 0
