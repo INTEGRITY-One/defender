@@ -19,7 +19,7 @@ script:
 services: mongodb
 after_success:
 - sudo apt-get -y install sshpass
-- sshpass -p $DEPLOY_PASS ssh -oStrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST touch travis_build_trigger
+- sshpass -p $DEPLOY_PASS ssh -v -oStrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST touch travis_build_trigger
 notifications:
   email:
     recipients:
