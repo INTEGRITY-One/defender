@@ -1,3 +1,7 @@
+#Install Bitnami Node
+FROM bitnami/node:0.12.5-0
+MAINTAINER Jim Braman <jim.braman@ionep.com>
+
 #Initialize Ubuntu
 RUN sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys E871F18B51E0147C77796AC81196BA81F6B0FC61
 RUN sudo touch /etc/apt/sources.list.d/zfs.list
