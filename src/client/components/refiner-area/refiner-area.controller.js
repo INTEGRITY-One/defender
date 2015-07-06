@@ -73,7 +73,8 @@ angular.module('defenderApp')
       'Listeria',
       'Organic',
       'Soup',
-      'Corn'];
+      'Corn',
+      'cheese'];
 
     var randomDrugResultList = [
       'sodium',
