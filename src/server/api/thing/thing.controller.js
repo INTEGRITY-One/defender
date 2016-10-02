@@ -108,12 +108,14 @@ exports.getFood = function(req, res) {
   var qrypath_device = "/device/enforcement.json?"+recentQueryString;
 
   var http = require('http');
+  //SWF 10/02/16: changes to fix https errors reaching out to FDA API
+  var https = require('https');
 
   var recallResultsList = [];
 
   // Now perform the actual queries
   // Query Food API
-  var qryReq = http.get({host: host, path: qrypath_food}, function(qryResp) {
+  var qryReq = https.get({host: host, path: qrypath_food}, function(qryResp) {
     console.log('STATUS: ' + qryResp.statusCode);
     console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
 
