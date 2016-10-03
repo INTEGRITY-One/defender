@@ -107,13 +107,13 @@ exports.getFood = function(req, res) {
   var qrypath_drug = "/drug/enforcement.json?"+recentQueryString;
   var qrypath_device = "/device/enforcement.json?"+recentQueryString;
 
-  var http = require('http');
+  var https = require('https');
 
   var recallResultsList = [];
 
   // Now perform the actual queries
   // Query Food API
-  var qryReq = http.get({host: host, path: qrypath_food}, function(qryResp) {
+  var qryReq = https.get({host: host, path: qrypath_food}, function(qryResp) {
     console.log('STATUS: ' + qryResp.statusCode);
     console.log('HEADERS: ' + JSON.stringify(qryResp.headers));
 
